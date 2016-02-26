@@ -1,9 +1,10 @@
 <?php
 /*
-    BaltSMS - SMS Atslēgas vārda sistēma
-    BaltSMS ir aplikācija, kura saistās ar baltgroup.eu hostinga un SMS pakalpojumu piedāvātāju. Šo aplikācija drīkst izmantot tikai baltgroup.eu klienti, kuriem ir vajadzīgie dati, lai aizpildītu konfigurāciju un izveidotu savienojumu
+    baltGro - SMS/PayPal maksājumu sistēmas gatavais risinājums
+    baltGro ir aplikācija, kura saistās ar baltGro SMS/PayPal un uzturēšanas risinājumiem. Šo aplikācija drīkst izmantot tikai baltgro.lv klienti, kuriem ir vajadzīgie dati, lai aizpildītu konfigurāciju un izveidotu savienojumu
     Aplikāciju un tās spraudņus veidoja Miks Zvirbulis
     http://twitter.com/MiksZvirbulis
+	https://twitter.com/mrYtteroy
 */
 /*
     NEAIZTIKT! AUTOMĀTISKI DEFINĒTAS VĒRTĪBAS!
@@ -159,5 +160,6 @@ if($c['page']['debug'] === true){
 $c['page']['lang_personal'] = (isset($_COOKIE['baltsms_language'])) ? $_COOKIE['baltsms_language'] : $c['page']['default_lang'];
 $lang = $c['lang'][$c['page']['lang_personal']];
 
+require $c['dir'] . "/system/functions.php";
 require $c['dir'] . "/system/db.class.php";
 require $c['dir'] . "/system/baltsms.class.php";

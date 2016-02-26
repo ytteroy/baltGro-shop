@@ -1,13 +1,15 @@
 <?php
 /*
-    BaltSMS - SMS Atslēgas vārda sistēma
-    BaltSMS ir aplikācija, kura saistās ar baltgroup.eu hostinga un SMS pakalpojumu piedāvātāju. Šo aplikācija drīkst izmantot tikai baltgroup.eu klienti, kuriem ir vajadzīgie dati, lai aizpildītu konfigurāciju un izveidotu savienojumu
-    Aplikāciju un pluginus veidoja Miks Zvirbulis
+    baltGro - SMS/PayPal maksājumu sistēmas gatavais risinājums
+    baltGro ir aplikācija, kura saistās ar baltGro SMS/PayPal un uzturēšanas risinājumiem. Šo aplikācija drīkst izmantot tikai baltgro.lv klienti, kuriem ir vajadzīgie dati, lai aizpildītu konfigurāciju un izveidotu savienojumu
+    Aplikāciju un tās spraudņus veidoja Miks Zvirbulis
     http://twitter.com/MiksZvirbulis
+	https://twitter.com/mrYtteroy
 */
+
 class baltsms{
 	# BaltSMS API Saite uz kuru tiks izsaukts pieprasījums
-	protected $baltsms_api_url = "//zb.baltgro.lv/1/";
+	protected $baltsms_api_url = "https://zb.baltgro.lv/1/";
 	# Atbilde
 	public $response;
 	# Cenas kods
@@ -75,14 +77,13 @@ class baltsms{
 	}
 
 	private function baltGroupCall($url){
-		$bGu['ip'] = isset($_SERVER['HTTP_CF_CONNECTING_IP'])? $_SERVER['HTTP_CF_CONNECTING_IP'] : $_SERVER['REMOTE_ADDR'];
 		$curl = curl_init();
 		
 		curl_setopt($curl, CURLOPT_URL, $url);
 		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($curl, CURLOPT_USERAGENT, 'baltGroupAPI/1.0'); // drošībai, bloķējam liekos pieprasījumus
 		curl_setopt($curl, CURLOPT_HTTPHEADER, array( // pievienojam mazu info par apmeklētāju un serveri
-			'User-Ip: ' . $bGu['ip'],
+			'User-Ip: ' . isset($_SERVER['HTTP_CF_CONNECTING_IP'])? $_SERVER['HTTP_CF_CONNECTING_IP'] : $_SERVER['REMOTE_ADDR'],
 			'Server-Ip: ' . $_SERVER['SERVER_ADDR'],
 			'Server-Url: ' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'],
 		));

@@ -1,4 +1,12 @@
 <?php
+/*
+    baltGro - SMS/PayPal maksājumu sistēmas gatavais risinājums
+    baltGro ir aplikācija, kura saistās ar baltGro SMS/PayPal un uzturēšanas risinājumiem. Šo aplikācija drīkst izmantot tikai baltgro.lv klienti, kuriem ir vajadzīgie dati, lai aizpildītu konfigurāciju un izveidotu savienojumu
+    Aplikāciju un tās spraudņus veidoja Miks Zvirbulis
+    http://twitter.com/MiksZvirbulis
+	https://twitter.com/mrYtteroy
+*/
+
 if(!isset($_SERVER['HTTP_X_REQUESTED_WITH']) OR (isset($_SERVER['HTTP_X_REQUESTED_WITH']) AND strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != "xmlhttprequest")) die("Ajax Only!");
 $p = basename(__FILE__, ".php");
 defined("config_present") or require "../config.inc.php";

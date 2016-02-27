@@ -85,11 +85,6 @@ $c['page']['debug'] = true;
 $c['page']['width'] = 650;
 
 /*
-    Šis regulē vai CSS, JS un citi stila faili tiks ielādēti no baltgroup.eu servera (ieslēgt/izslēgt - true/false)
-*/
-$c['page']['external_assets'] = false;
-
-/*
     Šis ieslēdz valodas karodziņu izvēli, kas ļaus mainīt aplikācijas valodu (ieslēgt/izslēgt - true/false)
 */
 $c['page']['language'] = true;

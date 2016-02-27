@@ -4,8 +4,8 @@
 <head>
 	<meta charset="utf-8">
 	<title><?php echo $c['page']['title']; ?></title>
-	<link rel="stylesheet" type="text/css" href="<?php echo ($c['page']['external_assets'] === true) ? "http://library.baltgroup.eu/sms" : $c['url'] . '/' . $c['page']['directory']; ?>/assets/css/baltsms.css">
-	<link rel="stylesheet" type="text/css" href="<?php echo ($c['page']['external_assets'] === true) ? "http://library.baltgroup.eu/sms" : $c['url'] . '/' . $c['page']['directory']; ?>/assets/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="<?php echo $c['url'] . '/' . $c['page']['directory']; ?>/assets/css/baltsms.css">
+	<link rel="stylesheet" type="text/css" href="<?php echo $c['url'] . '/' . $c['page']['directory']; ?>/assets/css/bootstrap.min.css">
 </head>
 <body class="baltsms">
 	<div class="progress" id="baltsms-loader">
@@ -17,7 +17,7 @@
 		<?php if($c['page']['language'] === true): ?>
 			<div id="baltsms-flags">
 				<?php foreach($c['lang'] as $language_key => $data): ?>
-					<img src="<?php echo ($c['page']['external_assets'] === true) ? "http://library.baltgroup.eu/sms" : $c['url'] . '/' . $c['page']['directory']; ?>/assets/images/flags/<?php echo $language_key; ?>.gif" onClick="setLanguage('<?php echo $language_key; ?>')">
+					<img src="<?php echo $c['url'] . '/' . $c['page']['directory']; ?>/assets/images/flags/<?php echo $language_key; ?>.gif" onClick="setLanguage('<?php echo $language_key; ?>')">
 				<?php endforeach; ?>
 			</div>
 		<?php endif; ?>
@@ -41,15 +41,15 @@
 			</div>
 		</div>
 	</div>
-	<script src="<?php echo ($c['page']['external_assets'] === true) ? "http://library.baltgroup.eu/sms" : $c['url'] . '/' . $c['page']['directory']; ?>/assets/js/jquery.min.js"></script>
-	<script src="<?php echo ($c['page']['external_assets'] === true) ? "http://library.baltgroup.eu/sms" : $c['url'] . '/' . $c['page']['directory']; ?>/assets/js/bootstrap.min.js"></script>
-	<script src="<?php echo ($c['page']['external_assets'] === true) ? "http://library.baltgroup.eu/sms" : $c['url'] . '/' . $c['page']['directory']; ?>/assets/js/jquery.stickytabs.js"></script>
-	<script src="<?php echo ($c['page']['external_assets'] === true) ? "http://library.baltgroup.eu/sms" : $c['url'] . '/' . $c['page']['directory']; ?>/assets/js/jquery.cookie.js"></script>
+	<script src="<?php echo $c['url'] . '/' . $c['page']['directory']; ?>/assets/js/jquery.min.js"></script>
+	<script src="<?php echo $c['url'] . '/' . $c['page']['directory']; ?>/assets/js/bootstrap.min.js"></script>
+	<script src="<?php echo $c['url'] . '/' . $c['page']['directory']; ?>/assets/js/jquery.stickytabs.js"></script>
+	<script src="<?php echo $c['url'] . '/' . $c['page']['directory']; ?>/assets/js/jquery.cookie.js"></script>
 	<script src="<?php echo $c['url'] . '/' . $c['page']['directory']; ?>/assets/js/iframe.contentWindow.js"></script>
 	<script type="text/javascript">
 		var baltsms_url = "<?php echo $c['url'] . '/' . $c['page']['directory']; ?>";
 	</script>
-	<script src="<?php echo ($c['page']['external_assets'] === true) ? "http://library.baltgroup.eu/sms" : $c['url'] . '/' . $c['page']['directory']; ?>/assets/js/baltsms.js?<?php echo time(); ?>"></script>
+	<script src="<?php echo $c['url'] . '/' . $c['page']['directory']; ?>/assets/js/baltsms.js?<?php echo time(); ?>"></script>
 	<script type="text/javascript">
 		jQuery(document).ready(function(){
 			loadPlugin("<?php echo $c['sms']['plugins'][$c['sms']['primary']][0]; ?>");

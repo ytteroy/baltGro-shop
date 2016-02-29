@@ -104,7 +104,7 @@ class baltsms{
 			fclose($debug);
 			$this->response['response']['isOk'] = 1;
 		}else{
-			$this->response = $this->baltGroupCall($baltsms_api_url . 'premiumsms/charge/code/'.$this->code.'/client/'.$c['sms']['client_id'].'/price/' . $this->price_code);
+			$this->response = $this->baltGroupCall($this->baltsms_api_url . 'premiumsms/charge/code/'.$this->code.'/client/'.$c['sms']['client_id'].'/price/' . $this->price_code);
 			$this->response = json_decode($this->response, true);
 		}
 	}

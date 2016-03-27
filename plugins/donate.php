@@ -283,8 +283,8 @@ $lang[$p] = $c['lang'][$p][$c['page']['lang_personal']];
 				<?php else: ?>
 					<?php foreach($donators as $donator): ?>
 						<tr>
-							<td><?php echo $donator['name']; ?></td>
-							<td><?php echo $donator['message']; ?></td>
+							<td><?php echo htmlspecialchars($donator['name']); ?></td>
+							<td><?php echo htmlspecialchars($donator['message']); ?></td>
 							<td><?php echo baltsms::returnPrice($donator['amount']); ?> EUR</td>
 							<td><?php echo date("d/m/Y H:i", $donator['time']); ?></td>
 						</tr>

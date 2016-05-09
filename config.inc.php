@@ -116,6 +116,7 @@ $c['lang']['lv'] = array(
     "plugin-mc_say" => "Čata ziņa",
     "plugin-mc_crate" => "Crate keys",
 	"pay_with_paypal" => "Maksāt ar PayPal",
+	"pay_with_bank" => "Maksāt ar bankas kontu / Webmoney",
     "plugin_not_found" => "[plugin-not-found] Spraudnis netika atrasts. Pārbaudi vai fails <strong>plugins/<PLUGIN></strong> eksistē!"
 );
 
@@ -138,6 +139,7 @@ $c['lang']['en'] = array(
     "plugin-mc_say" => "Chat message",
     "plugin-mc_crate" => "Crate keys",
 	"pay_with_paypal" => "Pay with PayPal",
+	"pay_with_bank" => "Pay with bank account / Webmomey",
     "plugin_not_found" => "[plugin-not-found] Plugin was not found. Check if the file <strong>plugins/<PLUGIN></strong> exists!"
 );
 

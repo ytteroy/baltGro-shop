@@ -174,7 +174,32 @@ if(isset($_POST['code'])):
 				<input type="text" class="form-control" name="code" placeholder="<?php echo $lang[$p]['form_unlock_code']; ?>" maxlength="9" autocomplete="off">
 			</div>
 		</div>
+		<script>
+		var x = 0.00;
+		function getvalue(element){
+			if(jQuery(element).find(":selected").attr("data-price")){
+				price = jQuery(element).find(":selected").data("price");
+			}else{
+				price = element.value;
+			}
+			x = price/100;
+		}
+		
+		function startPayment(type) {
+			var y = document.forms["<?php echo $p; ?>"]["code"].value;
+			if (y == null || y == "") {
+				if(type == "paypal"){
+					openWinPayPal(x);
+				}else{
+					openWinPaySera(x);
+				}
+				return false;
+			}
+		}
+		</script>
 		<div class="form-group">
+			<button type="button" class="btn btn-success" style="float:left !important; margin-left: 16px;" onclick="startPayment('paypal')"><?php echo $lang['pay_with_paypal']; ?></button>
+			<button type="button" class="btn btn-success" style="float:left !important; margin-left: 16px;" onclick="startPayment('paysera');"><?php echo $lang['pay_with_paysera']; ?></button>
 			<div id="baltsms-form-button">
 				<button type="submit" class="btn btn-primary"><?php echo $lang[$p]['form_buy']; ?></button>
 			</div>

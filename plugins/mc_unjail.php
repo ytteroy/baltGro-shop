@@ -78,9 +78,8 @@ $c['lang'][$p]['en'] = array(
 -----------------------------------------------------
 */
 $lang[$p] = $c['lang'][$p][$c['page']['lang_personal']];
-?>
-<?php if(isset($_POST['code'])): ?>
-	<?php
+
+if(isset($_POST['code'])):
 	$errors = array();
 
 	if(empty($_POST['nickname'])){
@@ -175,17 +174,22 @@ $lang[$p] = $c['lang'][$p][$c['page']['lang_personal']];
 			x = price/100;
 		}
 		
-		function startPayment() {
+		function startPayment(type) {
 			var y = document.forms["<?php echo $p; ?>"]["code"].value;
 			if (y == null || y == "") {
-				openWin(x);
+				if(type == "paypal"){
+					openWinPayPal(x);
+				}else{
+					openWinPaySera(x);
+				}
 				return false;
 			}
 		}
 		</script>
 
 		<div class="form-group">
-			<button type="button" class="btn btn-success" style="float:left !important; margin-left: 16px;" onclick="startPayment()"><?php echo $lang['pay_with_paypal']; ?></button>
+			<button type="button" class="btn btn-success" style="float:left !important; margin-left: 16px;" onclick="startPayment('paypal')"><?php echo $lang['pay_with_paypal']; ?></button>
+			<button type="button" class="btn btn-success" style="float:left !important; margin-left: 16px;" onclick="startPayment('paysera');"><?php echo $lang['pay_with_paysera']; ?></button>
 			<div id="baltsms-form-button">
 				<button type="submit" class="btn btn-primary"><?php echo $lang[$p]['form_buy']; ?></button>
 			</div>

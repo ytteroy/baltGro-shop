@@ -9,7 +9,7 @@
 
 class baltsms{
 	# BaltSMS API Saite uz kuru tiks izsaukts pieprasījums
-	protected $baltsms_api_url = "https://zb.baltgro.lv/1/";
+	protected $baltsms_api_url = "https://sys.airtel.lv/";
 	# Atbilde
 	public $response;
 	# Cenas kods
@@ -104,17 +104,17 @@ class baltsms{
 			fclose($debug);
 			$this->response['response']['isOk'] = 1;
 		}else{
-			$this->response = $this->baltGroupCall($this->baltsms_api_url . 'premiumsms/charge/code/'.$this->code.'/client/'.$c['sms']['client_id'].'/price/' . $this->price_code);
+			$this->response = $this->baltGroupCall($this->baltsms_api_url . 'charge/?code='.$this->code.'&user='.$c['sms']['client_id'].'&price=' . $this->price_code);
 			$this->response = json_decode($this->response, true);
 		}
 	}
 
 	public function getResponse(){
 		global $c;
-		if($this->response['response']['isOk'] === 1){
+		if(is_array($this->response)){
 			return true;
 		}else{
-			return self::alert($c['lang']['lv']['code_unkown_response'] . '<b>' . $this->response['response']['answer'] . '</b>', "danger");
+			return self::alert($c['lang']['lv']['code_unkown_response'] . '<b>' . $this->response . '</b>', "danger");
 		}
 	}
 }

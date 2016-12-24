@@ -251,22 +251,17 @@ if(isset($_POST['code'])):
 			x = price/100;
 		}
 		
-		function startPayment(type) {
+		function startPayment() {
 			var y = document.forms["<?php echo $p; ?>"]["code"].value;
 			if (y == null || y == "") {
-				if(type == "paypal"){
-					openWinPayPal(x);
-				}else{
-					openWinPaySera(x);
-				}
+				openWinPayPal(x);
 				return false;
 			}
 		}
 		</script>
 
 		<div class="form-group">
-			<button type="button" class="btn btn-success" style="float:left !important; margin-left: 16px;" onclick="startPayment('paypal')"><?php echo $lang['pay_with_paypal']; ?></button>
-			<button type="button" class="btn btn-success" style="float:left !important; margin-left: 16px;" onclick="startPayment('paysera');"><?php echo $lang['pay_with_paysera']; ?></button>
+			<button type="button" class="btn btn-success" style="float:left !important; margin-left: 16px;" onclick="startPayment()"><?php echo $lang['pay_with_paypal']; ?></button>
 			<div id="baltsms-form-button">
 				<button type="submit" class="btn btn-primary"><?php echo $lang[$p]['form_buy']; ?></button>
 			</div>

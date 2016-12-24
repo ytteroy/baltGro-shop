@@ -10,7 +10,7 @@
     NEAIZTIKT! AUTOMĀTISKI DEFINĒTAS VĒRTĪBAS!
 */
 define("samp_config_present", true);
-$samp = array();
+$samp = [];
 require $c['dir'] . "/system/samp.class.php";
 /*
 -----------------------------------------------------

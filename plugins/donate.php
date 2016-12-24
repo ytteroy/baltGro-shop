@@ -55,7 +55,7 @@ $c[$p]['sms']['comment_char_limit'] = 250;
 /*
     Ziedošanas pieļaujamās cenas, ievadītas masīvā cenu kodu formātā
 */
-$c[$p]['prices'] = array(
+$c[$p]['prices'] = [
 	5,
 	25,
 	50,
@@ -73,7 +73,7 @@ $c[$p]['prices'] = array(
 	450,
 	500,
 	550
-	);
+];
 
 $c['lang'][$p]['lv'] = array(
 	"instructions" => "Lai ziedotu <PRICE> EUR sūti kodu <b><KEYWORD><CODE></b> uz <b><NUMBER></b>, lai saņemtu atslēgas kodu!",
@@ -249,21 +249,16 @@ if(isset($_POST['code'])):
 			x = price/100;
 		}
 		
-		function startPayment(type) {
+		function startPayment() {
 			var y = document.forms["<?php echo $p; ?>"]["code"].value;
 			if (y == null || y == "") {
-				if(type == "paypal"){
-					openWinPayPal(x);
-				}else{
-					openWinPaySera(x);
-				}
+				openWinPayPal(x);
 				return false;
 			}
 		}
 		</script>
 		<div class="form-group">
-			<button type="button" class="btn btn-success" style="float:left !important; margin-left: 16px;" onclick="startPayment('paypal');"><?php echo $lang['pay_with_paypal']; ?></button>
-			<button type="button" class="btn btn-success" style="float:left !important; margin-left: 16px;" onclick="startPayment('paysera');"><?php echo $lang['pay_with_paysera']; ?></button>
+			<button type="button" class="btn btn-success" style="float:left !important; margin-left: 16px;" onclick="startPayment();"><?php echo $lang['pay_with_paypal']; ?></button>
 			<div id="baltsms-form-button">
 				<button type="submit" class="btn btn-primary"><?php echo $lang[$p]['form_donate']; ?></button>
 			</div>

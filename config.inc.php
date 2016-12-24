@@ -20,7 +20,7 @@ Konfigurāciju rediģēt drīkst pēc šīs līnijas
 */
 
 /*
-    Šis ir Tavs klienta ID, kuru var atrast baltgroup.eu kontroles panelī
+    Šis ir Tavs klienta ID, kuru var atrast Airtel E-commerece kontroles panelī
 */
 $c['sms']['client_id'] = 1;
 
@@ -40,7 +40,7 @@ $c['sms']['debug'] = false;
 $c['sms']['debug_code'] = 145696619;
 
 /*
-    Šis ir Tavs baltgroup.eu SMS sistēmas telefona numurs uz kuru tiks sūtīts atslēgas vārda pieprasījums. Nemaini, ja baltgroup.eu to nepieprasa mainīt
+    Šis ir Tavs SMS sistēmas telefona numurs uz kuru tiks sūtīts atslēgas vārda pieprasījums. Nemaini, ja Airtel to nepieprasa mainīt
 */
 $c['sms']['number'] = 144;
 
@@ -66,6 +66,7 @@ $c['sms']['plugins'] = array(
 
 /*
     Šī ir direktorija pēc ROOT direktorijas, kas noved uz SMS veikala failiem
+	Ja pilnā direktorija uz veikalu ir /home/user/public_html/sms, tad jāievada sms.
 */
 $c['page']['directory'] = "sms";
 
@@ -103,7 +104,7 @@ $c['lang']['lv'] = [
     "code_unkown_response" => "Sazinies ar administratoru nododot sekojošo atbildi: ",
     "plugin-type-web" => "Website",
     "plugin-type-mc" => "Izvēlies",
-	"plugin-donate" => "Ziedot",
+	"plugin-donate" => "Atbalstīt projektu",
     "plugin-mc_group" => "Grupas",
     "plugin-mc_unban" => "Bana noņemšana",
     "plugin-mc_money" => "Nauda",
@@ -115,8 +116,7 @@ $c['lang']['lv'] = [
     "plugin-mc_register" => "Reģistrācija",
     "plugin-mc_say" => "Čata ziņa",
     "plugin-mc_crate" => "Crate keys",
-	"pay_with_paypal" => "Maksāt ar PayPal",
-	"pay_with_paysera" => "Maksāt ar bankas kontu / Webmoney",
+	"pay_with_paypal" => "Maksāt ar Airtel Payhub",
     "plugin_not_found" => "[plugin-not-found] Spraudnis netika atrasts. Pārbaudi vai fails <strong>plugins/<PLUGIN></strong> eksistē!"
 ];
 
@@ -138,8 +138,7 @@ $c['lang']['en'] = [
     "plugin-mc_register" => "Registration",
     "plugin-mc_say" => "Chat message",
     "plugin-mc_crate" => "Crate keys",
-	"pay_with_paypal" => "Pay with PayPal",
-	"pay_with_paysera" => "Pay with bank account / Webmomey",
+	"pay_with_paypal" => "Pay with Airtel Payhub",
     "plugin_not_found" => "[plugin-not-found] Plugin was not found. Check if the file <strong>plugins/<PLUGIN></strong> exists!"
 ];
 

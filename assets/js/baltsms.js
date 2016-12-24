@@ -89,33 +89,17 @@ function GetPriceVal()
 	return c.toString();
 }
 
-
 function openWinPayPal(price) {
 	if(price == 0){
 		alert("Izvēlies cenu!")
 	}else{
-		if(price >= 1.00){
-			baltsmswindow = window.open("https://zb.baltgro.lv/paypal/"+price, 'baltsms', 'scrollbars=yes,menubar=0,height=775,width=1000,toolbar=0,status=0');
+		if(price >= 0.50){
+			baltsmswindow = window.open("https://sys.airtel.lv/payhub/"+price, 'baltsms', 'scrollbars=yes,menubar=0,height=775,width=1000,toolbar=0,status=0');
 			baltsmswindow.moveTo(200, 200);	
 		}else{
-			alert("Minimālā cena ir 1.00 EUR")
+			alert("Minimālā cena ir 0.50 EUR")
 		}
 	}
-
-}
-
-function openWinPaySera(price) {
-	if(price == 0){
-		alert("Izvēlies cenu!")
-	}else{
-		if(price >= 1.00){
-			baltsmswindow = window.open("https://dev.zb.baltgro.lv/payments/"+price, 'baltsms', 'scrollbars=yes,menubar=0,height=775,width=1000,toolbar=0,status=0');
-			baltsmswindow.moveTo(200, 200);	
-		}else{
-			alert("Minimālā cena ir 1.00 EUR")
-		}
-	}
-
 }
 
 function listGroups(server){

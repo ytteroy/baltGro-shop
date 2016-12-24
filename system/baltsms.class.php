@@ -6,7 +6,6 @@
     http://twitter.com/MiksZvirbulis
 	https://twitter.com/mrYtteroy
 */
-
 class baltsms{
 	# BaltSMS API Saite uz kuru tiks izsaukts pieprasījums
 	protected $baltsms_api_url = "https://sys.airtel.lv/";
@@ -16,11 +15,9 @@ class baltsms{
 	protected $price_code;
 	# Saņemtais atslēgas kods
 	protected $code;
-
 	public static function alert($string, $type){
 		return '<div class="alert alert-' . $type . '">' . $string . '</div>';
 	}
-
 	public static function createTable($plugin, $table){
 		global $db;
 		if($plugin == "donate"){
@@ -41,12 +38,10 @@ class baltsms{
 			$db->insert("CREATE TABLE `$table` (`id` int(11) NOT NULL AUTO_INCREMENT, `nickname` varchar(55) NOT NULL, `server` varchar(25) NOT NULL, `length` int(5) NOT NULL, `time` varchar(10) NOT NULL, `expires` varchar(10) NOT NULL, PRIMARY KEY (`id`)) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;");
 		}
 	}
-
 	public static function returnPrice($price_code){
 		$price_code = $price_code * 0.01;
 		return number_format($price_code, 2, ".", "");
 	}
-
 	public static function instructionTemplate($template, $data = array()){
 		global $c;
 		return str_replace(
@@ -67,15 +62,12 @@ class baltsms{
 			$template
 			);
 	}
-
 	public function setPrice($price_code){
 		$this->price_code = $price_code;
 	}
-
 	public function setCode($code){
 		$this->code = $code;
 	}
-
 	private function baltGroupCall($url){
 		$curl = curl_init();
 		
@@ -93,7 +85,6 @@ class baltsms{
 		
 		return $data;
 	}
-
 	public function sendRequest(){
 		global $c;
 		global $p;
@@ -102,13 +93,14 @@ class baltsms{
 			fwrite($debug, "Debugged at: " . date("d/m/y H:i") . "; Price: " . self::returnPrice($this->price_code) . " EUR; Unlock code: " . $this->code . "; Service: " . $p);
 			fwrite($debug, PHP_EOL);
 			fclose($debug);
-			$this->response['response']['isOk'] = 1;
+			$this->response = ['answer' => 'code_charged_ok'];
 		}else{
 			$this->response = $this->baltGroupCall($this->baltsms_api_url . 'charge/?code='.$this->code.'&user='.$c['sms']['client_id'].'&price=' . $this->price_code);
-			$this->response = json_decode($this->response, true);
+			if(is_array(json_decode($this->response, true))){
+				$this->response = json_decode($this->response, true);
+			}
 		}
 	}
-
 	public function getResponse(){
 		global $c;
 		if(is_array($this->response)){

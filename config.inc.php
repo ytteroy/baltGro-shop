@@ -10,7 +10,7 @@
     NEAIZTIKT! AUTOMĀTISKI DEFINĒTAS VĒRTĪBAS!
 */
 define("config_present", true);
-$c = array();
+$c = [];
 $c['dir'] = realpath(dirname(__FILE__));
 $c['url'] = "http" . ((!empty($_SERVER['HTTPS'])) ? "s" : "") . "://" . $_SERVER['SERVER_NAME'];
 /*
@@ -53,15 +53,15 @@ $c['sms']['primary'] = "web";
     Šis ir spraudņu saraksts, kas tiek ievadīts masīvā. Lūdzu ievadi tos spraudņus, kurus vēlies redzēt savā veikalā un tos, kuri pastāv /plugins folderī
 */
 $c['sms']['plugins'] = array(
-	"web" => array(
+	"web" => [
         "donate"
-    ),
-    "mc" => array(
+    ],
+    "mc" => [
         "mc_group",
         "mc_crate",
         "mc_unban",
         "mc_money"
-    )
+    ],
 );
 
 /*
@@ -97,7 +97,7 @@ $c['page']['default_lang'] = "lv";
 /*
     Valodas definīcijas
 */
-$c['lang']['lv'] = array(
+$c['lang']['lv'] = [
     "code_wrong_price" => "Norādītais atslēgas kods nav derīgs priekš izvēlētās summas!",
     "code_not_found" => "Norādītais atslēgas kods nav atrasts sistēmā!",
     "code_unkown_response" => "Sazinies ar administratoru nododot sekojošo atbildi: ",
@@ -118,9 +118,9 @@ $c['lang']['lv'] = array(
 	"pay_with_paypal" => "Maksāt ar PayPal",
 	"pay_with_paysera" => "Maksāt ar bankas kontu / Webmoney",
     "plugin_not_found" => "[plugin-not-found] Spraudnis netika atrasts. Pārbaudi vai fails <strong>plugins/<PLUGIN></strong> eksistē!"
-);
+];
 
-$c['lang']['en'] = array(
+$c['lang']['en'] = [
     "code_wrong_price" => "The specified unlock code is not associated with the price chosen!",
     "code_not_found" => "The specified unlock code has not been found in the database!",
     "code_unkown_response" => "Contact the administrator by passing on this message: ",
@@ -141,7 +141,7 @@ $c['lang']['en'] = array(
 	"pay_with_paypal" => "Pay with PayPal",
 	"pay_with_paysera" => "Pay with bank account / Webmomey",
     "plugin_not_found" => "[plugin-not-found] Plugin was not found. Check if the file <strong>plugins/<PLUGIN></strong> exists!"
-);
+];
 
 /*
 -----------------------------------------------------

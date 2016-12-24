@@ -340,38 +340,36 @@ if(isset($_POST['code'])):
 						<td colspan="4"><?php echo $lang[$p]['table_no_buyers']; ?></td>
 					</tr>
 				<?php else: ?>
-					<?php foreach($buyers as $buyer): ?>
+					<?php
+					foreach($buyers as $buyer){
+						/*
+							Neaiztikt!!! Grupas termiņa pārbaude un attiecīga dzēšana!
+							Neliela informācija: grupa tiks dzēsta no saraksta UN servera tikai un vienīgi, ja serveris būs tiešsaistē. Uz katru ielādi, tiks veikta termiņu pārbaude un ja serveris būs sasniedzams - tā tiks dzēsta gan no servera, gan no datubāzes.
+						*/
+						if($buyer['expires'] < time()){
+							if($mc['rcon'][$buyer['server']]->connect() != false){
+								$removeGroup = str_replace(
+									array("<NICKNAME>", "<GROUP>"),
+									array($buyer['nickname'], $buyer['mc_group']),
+									$c[$p]['commands']['removeGroup']
+								);
+								$mc['rcon'][$buyer['server']]->send_command($removeGroup);
+								$db->delete("DELETE FROM `" . $c[$p]['db']['table'] . "` WHERE `id` = ?", array($buyer['id']));
+							}
+						}
+						/*
+							Neaiztikt!!! Grupas termiņa pārbauda un attiecīga dzēšana!
+						*/
+					?>
 						<tr>
 							<td><?php echo htmlspecialchars($buyer['nickname']); ?></td>
 							<td><?php echo $mc['servers'][$buyer['server']]->title; ?></td>
 							<td><?php echo date("d/m/y H:i", $buyer['time']); ?> - <?php echo date("d/m/y H:i", $buyer['expires']); ?></td>
 							<td><?php echo $buyer['mc_group']; ?></td>
 						</tr>
-					<?php endforeach; ?>
+					<?php } ?>
 				<?php endif; ?>
 			</tbody>
 		</table>
 	<?php endif; ?>
 <?php endif; ?>
-<?php
-/*
-    Neaiztikt!!! Grupas termiņa pārbaude un attiecīga dzēšana!
-    Neliela informācija: grupa tiks dzēsta no saraksta UN servera tikai un vienīgi, ja serveris būs tiešsaistē. Uz katru ielādi, tiks veikta termiņu pārbaude un ja serveris būs sasniedzams - tā tiks dzēsta gan no servera, gan no datubāzes.
-*/
-$purchases = $db->fetchAll("SELECT `id`, `nickname`, `server`, `mc_group`, `expires` FROM `" . $c[$p]['db']['table'] . "`");
-foreach($purchases as $purchase){
-	if($purchase['expires'] <= time()){
-		if($mc['rcon'][$purchase['server']]->connect() != false){
-			$removeGroup = str_replace(
-				array("<NICKNAME>", "<GROUP>"),
-				array($purchase['nickname'], $purchase['mc_group']),
-				$c[$p]['commands']['removeGroup']
-			);
-			$mc['rcon'][$purchase['server']]->send_command($removeGroup);
-			$db->delete("DELETE FROM `" . $c[$p]['db']['table'] . "` WHERE `id` = ?", array($purchase['id']));
-		}
-	}
-}
-/*
-    Neaiztikt!!! Grupas termiņa pārbauda un attiecīga dzēšana!
-*/

@@ -39,6 +39,7 @@
 					<?php endforeach; ?>
 				</div>
 			</div>
+			<div class="row"><a href="https://airtel.lv" target="_blank" class="pull-right" title="Payments by Airtel.lv"><img src="http://cdn.airtel.lv/art.png" class="img-responsive" alt="Payments by Airtel.lv" /></a></div>
 		</div>
 	</div>
 	<script src="<?php echo $c['url'] . '/' . $c['page']['directory']; ?>/assets/js/jquery.min.js"></script>

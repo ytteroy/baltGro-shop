@@ -27,7 +27,7 @@ $c['sms']['client_id'] = 1;
 /*
     Šis ir Tavs baltgroup.eu kontroles paneļa reģistrētais atslēgas vārds, kurš tiks uzrādīts pie SMS sūtīšanas instrukcijām
 */
-$c['sms']['keyword'] = "BTM";
+$c['sms']['keyword'] = "ART";
 
 /*
     Šis ieslēdz SMS debug, kas ļaus izmantot zemāk norādīto kodu, lai testētu pakalpojumu pieslēgšanu pēc tās apmaksas (ieslēgt/izslēgt - true/false)

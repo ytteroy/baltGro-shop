@@ -41,12 +41,12 @@ $c[$p]['ingame']['message'] = "<NICKNAME> tikko nopirka <GROUP> statusu izmantoj
 /*
     Grupas pievienošanas komanda. Pēc noklusējuma, pievienota PermissionsEX komanda
 */
-$c[$p]['commands']['addGroup'] = "pex user <NICKNAME> group set <GROUP>";
+$c[$p]['commands']['addGroup'] = "pex group <GROUP> user add <NICKNAME>";
 
 /*
     Grupas noņemšanas komanda. Pēc noklusējuma, pievienota PermissionsEX komanda
 */
-$c[$p]['commands']['removeGroup']  = "pex user <NICKNAME> group remove <GROUP>";
+$c[$p]['commands']['removeGroup']  = "pex group <GROUP> user remove <NICKNAME>";
 
 $c[$p]['groups'] = array(
     "MyServer" => array(

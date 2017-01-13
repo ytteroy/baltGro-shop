@@ -143,7 +143,7 @@ $lang[$p] = $c['lang'][$p][$c['page']['lang_personal']]; # Definējam lietotāja
 	# if($db->tableExists($c[$p]['db']['table']) === false) echo baltsms::createTable($p, $c[$p]['db']['table']);
 	?>
 	<form class="form-horizontal" method="POST" id="<?php echo $p; ?>">
-		<div class="alert alert-info" id="instructions"><?php echo baltsms::instructionTemplate($lang[$p]['instructions'], array("price" => baltsms::returnPrice($c[$p]['price']), "code" => $c[$p]['price'])); ?></div>
+		<div class="alert alert-info" id="instructions"><?php echo baltsms::instructionTemplate($lang['instructions'], array("price" => baltsms::returnPrice($c[$p]['price']), "code" => $c[$p]['price'])); ?></div>
 		<div id="alerts"></div>
 		<div class="form-group">
 			<label for="name" class="col-sm-2 control-label"><?php echo $lang[$p]['form_unlock_code']; ?></label>

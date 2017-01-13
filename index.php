@@ -5,7 +5,7 @@
 	<meta charset="utf-8">
 	<title><?php echo $c['page']['title']; ?></title>
 	<link rel="stylesheet" type="text/css" href="<?php echo $c['url'] . '/' . $c['page']['directory']; ?>/assets/css/baltsms.css">
-	<link rel="stylesheet" type="text/css" href="<?php echo $c['url'] . '/' . $c['page']['directory']; ?>/assets/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="//cdn.airtel.lv/beagle/css/style.css">
 </head>
 <body class="baltsms">
 	<div class="progress" id="baltsms-loader">

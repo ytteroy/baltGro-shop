@@ -54,13 +54,13 @@ $c['sms']['primary'] = "web";
 */
 $c['sms']['plugins'] = array(
 	"web" => [
-        "donate"
+        "donate",
     ],
     "mc" => [
         "mc_group",
         "mc_crate",
         "mc_unban",
-        "mc_money"
+        "mc_money",
     ],
 );
 
@@ -99,6 +99,7 @@ $c['page']['default_lang'] = "lv";
     Valodas definīcijas
 */
 $c['lang']['lv'] = [
+	"instructions" => "Sūti īsziņu ar tekstu <b><KEYWORD><CODE></b> uz <b><NUMBER></b>, lai iegādātos atslēgas kodu. <SUBSTART>Cena ir <PRICE> EUR, kas tiks pievienota telefona rēķinam vai atrēķināta no priekšapmaksas kartes<SUBEND>",
     "code_wrong_price" => "Norādītais atslēgas kods nav derīgs priekš izvēlētās summas!",
     "code_not_found" => "Norādītais atslēgas kods nav atrasts sistēmā!",
     "code_unkown_response" => "Sazinies ar administratoru nododot sekojošo atbildi: ",
@@ -121,6 +122,7 @@ $c['lang']['lv'] = [
 ];
 
 $c['lang']['en'] = [
+	"instructions" => "Send the following code: <b><KEYWORD><CODE></b> to <b><NUMBER></b>, to receive an unclock code. <SUBSTART>Price is <PRICE> EUR, that will be added to the phone bill or deducted from the pre-paid card<SUBEND>",
     "code_wrong_price" => "The specified unlock code is not associated with the price chosen!",
     "code_not_found" => "The specified unlock code has not been found in the database!",
     "code_unkown_response" => "Contact the administrator by passing on this message: ",

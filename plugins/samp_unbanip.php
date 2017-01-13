@@ -131,7 +131,7 @@ if(isset($_POST['code'])):
 	?>
 <?php else: ?>
 	<form class="form-horizontal" method="POST" id="<?php echo $p; ?>">
-		<div class="alert alert-info" id="instructions" style="display: none;"><?php echo baltsms::instructionTemplate($lang[$p]['instructions'], array("price" => baltsms::returnPrice(0), "code" => 0, "length" => 0)); ?></div>
+		<div class="panel panel-border panel-contrast" id="instructions"><div class="panel-heading panel-heading-contrast text-center"><?php echo baltsms::instructionTemplate($lang['instructions'], array("price" => baltsms::returnPrice($c[$p]['prices'][0]), "code" => $c[$p]['prices'][0])); ?></div></div>
 		<div id="alerts"></div>
 		<div class="form-group">
 			<label for="nickname" class="col-sm-2 control-label"><?php echo $lang[$p]['form_player_name']; ?></label>

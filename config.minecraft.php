@@ -46,8 +46,8 @@ $mc['servers'] = array(
 		"rcon_port" => 25575,
 		"rcon_password" => "",
 		"show" => true
-		),
-	);
+	),
+);
 
 foreach($mc['servers'] as $type => $data){
 	$mc['rcon'][$type] = new MinecraftRcon($data->ip_address, $data->rcon_port, $data->rcon_password, 10);

@@ -3,8 +3,11 @@
 <html lang="lv">
 <head>
 	<meta charset="utf-8">
+	<meta name="author" content="baltGro, SIA">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
 	<title><?php echo $c['page']['title']; ?></title>
-	<link rel="stylesheet" type="text/css" href="<?php echo $c['url'] . '/' . $c['page']['directory']; ?>/assets/css/baltsms.css">
+	<link rel="stylesheet" type="text/css" href="<?php echo $c['url'] . '/' . $c['page']['directory']; ?>/assets/css/baltgro.css">
 	<link rel="stylesheet" type="text/css" href="//cdn.airtel.lv/beagle/css/style.css">
 </head>
 <body class="baltsms">
@@ -50,7 +53,7 @@
 	<script type="text/javascript">
 		var baltsms_url = "<?php echo $c['url'] . '/' . $c['page']['directory']; ?>";
 	</script>
-	<script src="<?php echo $c['url'] . '/' . $c['page']['directory']; ?>/assets/js/baltsms.js?<?php echo time(); ?>"></script>
+	<script src="<?php echo $c['url'] . '/' . $c['page']['directory']; ?>/assets/js/baltgro.js?<?php echo filemtime($c['dir'] . '/assets/js/baltsms.js'); ?>"></script>
 	<script type="text/javascript">
 		jQuery(document).ready(function(){
 			loadPlugin("<?php echo $c['sms']['plugins'][$c['sms']['primary']][0]; ?>");

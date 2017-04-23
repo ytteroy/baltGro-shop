@@ -45,8 +45,8 @@ $samp['servers'] = array(
 		"query_port" => 7777,
 		"rcon_password" => "",
 		"show" => true
-		),
-	);
+	),
+);
 
 foreach($samp['servers'] as $type => $data){
 	if(!empty($data->query_port)){

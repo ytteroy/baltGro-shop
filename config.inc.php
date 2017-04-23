@@ -9,10 +9,12 @@
 /*
     NEAIZTIKT! AUTOMĀTISKI DEFINĒTAS VĒRTĪBAS!
 */
+
 define("config_present", true);
 $c = [];
 $c['dir'] = realpath(dirname(__FILE__));
 $c['url'] = "http" . ((!empty($_SERVER['HTTPS'])) ? "s" : "") . "://" . $_SERVER['SERVER_NAME'];
+
 /*
 -----------------------------------------------------
 Konfigurāciju rediģēt drīkst pēc šīs līnijas
@@ -37,7 +39,7 @@ $c['sms']['debug'] = false;
 /*
     Šis ir SMS debug atslēgas kods, kurš pieļaus neapmaksātu pakalpojumu apstiprinājumu kamēr SMS debug būs ieslēgts
 */
-$c['sms']['debug_code'] = 145696619;
+$c['sms']['debug_code'] = 145696519;
 
 /*
     Šis ir Tavs SMS sistēmas telefona numurs uz kuru tiks sūtīts atslēgas vārda pieprasījums. Nemaini, ja Airtel to nepieprasa mainīt
@@ -73,7 +75,7 @@ $c['page']['directory'] = "sms";
 /*
     Šis ļaus rediģēt lapas nosaukumu, kas ir <title> saturā
 */
-$c['page']['title'] = "SMS Veikals";
+$c['page']['title'] = "Airtel veikals";
 
 /*
     Šī ir sistēmas diagnostika, kura ieslēdz kļūdu reportēšanu. Lūdzu nesajauc šo ar SMS sistēmas debug
@@ -160,6 +162,6 @@ if($c['page']['debug'] === true){
 $c['page']['lang_personal'] = (isset($_COOKIE['baltsms_language'])) ? $_COOKIE['baltsms_language'] : $c['page']['default_lang'];
 $lang = $c['lang'][$c['page']['lang_personal']];
 
-require $c['dir'] . "/system/functions.php";
-require $c['dir'] . "/system/db.class.php";
-require $c['dir'] . "/system/baltsms.class.php";
+require $c['dir'] . '/system/functions.php';
+require $c['dir'] . '/system/db.class.php';
+require $c['dir'] . '/system/baltsms.class.php';

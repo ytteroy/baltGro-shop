@@ -9,10 +9,9 @@
  *	@version 1.2.1
  *	@author David Weston <westie@typefish.co.uk>, NeoPhoenix <admin@neophoenix.net>
  *	@copyright 2010; http://www.typefish.co.uk/licences/
- */
+*/
 
-class SampQueryAPI
-{
+class SampQueryAPI{
 	//@ignore
 	private $rSocket = false;
 

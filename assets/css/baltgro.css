@@ -53,11 +53,15 @@ textarea.baltsms{
 
 div#baltsms-flags{
 	position: absolute;
-	margin-left: -20px;
+	margin-left: -30px;
 }
 
 div#baltsms-flags img{
 	cursor: pointer;
 	display: block;
 	margin-top: 10px;
+}
+
+div#instructions .panel-heading{
+	padding-top: 11px;
 }

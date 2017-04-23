@@ -76,7 +76,7 @@ $c[$p]['prices'] = [
 ];
 
 $c['lang'][$p]['lv'] = array(
-	"instructions" => "Lai ziedotu <PRICE> EUR sūti kodu <b><KEYWORD><CODE></b> uz <b><NUMBER></b>, lai saņemtu atslēgas kodu!",
+	"instructions" => "Lai ziedotu <PRICE> EUR, sūti <b><KEYWORD><CODE></b> uz <b><NUMBER></b>, lai saņemtu atslēgas kodu!",
 	# Kļūdas
 	"error_empty_name" => "Ievadi savu vārdu!",
 	"error_empty_price" => "Izvēlies cenu!",
@@ -208,7 +208,7 @@ if(isset($_POST['code'])):
 	if($db->tableExists($c[$p]['db']['table']) === false) echo baltsms::createTable($p, $c[$p]['db']['table']);
 	?>
 	<form class="form-horizontal" method="POST" id="<?php echo $p; ?>">
-		<div class="alert alert-info" id="instructions"><?php echo baltsms::instructionTemplate($lang['instructions'], array("price" => baltsms::returnPrice($c[$p]['prices'][0]), "code" => $c[$p]['prices'][0])); ?></div>
+		<div class="panel panel-border panel-contrast" id="instructions"><div class="panel-heading panel-heading-contrast text-center"><?php echo baltsms::instructionTemplate($lang[$p]['instructions'], array("price" => baltsms::returnPrice($c[$p]['prices'][0]), "code" => $c[$p]['prices'][0])); ?></div></div>
 		<div id="alerts"></div>
 		<div class="form-group">
 			<label for="name" class="col-sm-2 control-label"><?php echo $lang[$p]['form_name']; ?></label>

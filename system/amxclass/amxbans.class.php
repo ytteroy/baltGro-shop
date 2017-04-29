@@ -147,17 +147,34 @@ class amxbans{
 		}
 	}
 	
-	public function removeAccessToPlayer($playerid, $server){
+	public function removeAccessToPlayer($playerid, $remove, $server){
 		$player_admin = $this->db->query("SELECT * FROM `".$this->dbprefix . $this->tables['admins']."` WHERE `id` = '".$playerid."'");
 		if($this->db->rows($player_admin)){
-			$this->db->query("DELETE FROM `".$this->dbprefix . $this->tables['admins']."` WHERE `id` = '".$playerid."'");
-			$this->db->query("DELETE FROM `".$this->dbprefix . $this->tables['admins-servers']."` WHERE `admin_id` = '".$playerid."'");
+			$player_admin = $this->db->fetch($player_admin);
+			
+			$access = str_split($player_admin['access']);
+			$remove = str_split($remove);
+			
+			$new = array_diff($access, $remove);
+			
+			$new = implode('', $new);
+			
+			if(empty($new)){
+				$this->db->query("DELETE FROM `".$this->dbprefix . $this->tables['admins']."` WHERE `id` = '".$playerid."'");
+				$this->db->query("DELETE FROM `".$this->dbprefix . $this->tables['admins-servers']."` WHERE `admin_id` = '".$playerid."'");
+			}else{
+				$nickname = str_replace( 'ITP[' . $player_admin['access'] . ']', '', $player_admin['nickname'] );
+				$nickname = str_replace( "  ", " ", $nickname );
+				$nickname = trim( $nickname );
+				
+				$this->db->query("UPDATE `" . $this->dbprefix . $this->tables['admins'] . "` SET `access` = '" . $new . "', `nickname` = '" . $nickname . "' WHERE `id` = " . $playerid);
+			}
 			
 			$this->reload_admins($server);
 			
-			return 'removed';
+			return true;
 		}else{
-			return 'no';
+			return false;
 		}
 	}
 	

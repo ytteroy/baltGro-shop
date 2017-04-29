@@ -29,7 +29,7 @@ $c[$p]['db']['table'] = "baltsms_amx_admin";
 $c[$p]['sms']['buyers'] = true;
 
 
-$c[$p]['sms']['access'] = 'abcdefghijkl';
+$c[$p]['sms']['access'] = 'bcdefijumz';
 
 /*
     Vai pēc veiksmīga pirkuma izsūtīt informatīvu paziņojumu uz serveri?
@@ -59,7 +59,7 @@ $c['lang'][$p]['lv'] = array(
     "error_empty_code" => "Ievadi atslēgas kodu!",
     "error_invalid_code" => "Atslēgas kods nav pareizi sastādīts!",
     "error_price_not_listed" => "Izvēlētā cena nav atrasta priekš izvēlētā servera!",
-    "money_purchased" => "Nauda veiksmīgi iegādāta. Lai jauka spēlēšana!",
+    "money_purchased" => "ACC veiksmīgi iegādāts. Lai jauka spēlēšana!",
 	# Forma
     "form_price" => "Cena",
     "form_code" => "Atslēgas kods",
@@ -76,7 +76,7 @@ $c['lang'][$p]['lv'] = array(
     "table_server" => "Serveris",
     "table_flags" => "Flagi",
     "table_date" => "Datums",
-    "table_no_buyers" => "Neviens vēl nav iegādājies naudu. Varbūt vēlies būt pirmais?"
+    "table_no_buyers" => "Neviens vēl nav iegādājies ACC. Varbūt vēlies būt pirmais?"
 );
 
 $c['lang'][$p]['en'] = array(
@@ -88,7 +88,7 @@ $c['lang'][$p]['en'] = array(
 	"error_empty_code" => "Enter the unlock code!",
 	"error_invalid_code" => "The format of the unlock code is not valid!",
 	"error_price_not_listed" => "The selected price has not been found for the selected server!",
-	"money_purchased" => "The money was purchased successfully. Have fun!",
+	"money_purchased" => "ACC was purchased successfully. Have fun!",
 	# Forma
 	"form_price" => "Price",
 	"form_code" => "Unlock code",
@@ -105,7 +105,7 @@ $c['lang'][$p]['en'] = array(
     "table_server" => "Server",
     "table_flags" => "Flags",
     "table_date" => "Date",
-    "table_no_buyers" => "No one has bought any money yet. Would you like to be the first?"
+    "table_no_buyers" => "No one has bought ACC yet. Would you like to be the first?"
 );
 /*
 -----------------------------------------------------
@@ -285,7 +285,7 @@ if(isset($_POST['code'])):
 					foreach($buyers as $buyer){
 						if($buyer['expires'] < time()){
 							if($amx['servers'][$buyer['server']]['show'] != false){
-								$removeplayer = $amxclass->removeAccessToPlayer($buyer['player_id'], $buyer['server']);
+								$removeplayer = $amxclass->removeAccessToPlayer($buyer['player_id'], $buyer['access'], $buyer['server']);
 								if($removeplayer == true){
 									$db->delete("DELETE FROM `" . $c[$p]['db']['table'] . "` WHERE `id` = ?", array($buyer['id']));
 								}

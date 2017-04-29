@@ -14,7 +14,7 @@ defined("amx_config_present") or require "../config.amx.php";
 in_array($p, $c['sms']['plugins']['amx']) or die(baltsms::alert("Spraudnis nav ievadīts atļauto spraudņu sarakstā!", "danger"));
 /*
 -----------------------------------------------------
-    AMX naudas spraudņa konfigurācija
+    Minecraft naudas spraudņa konfigurācija
 -----------------------------------------------------
 */
 
@@ -31,8 +31,19 @@ $c[$p]['sms']['buyers'] = true;
 
 $c[$p]['sms']['access'] = 'abcdefghijkl';
 
+/*
+    Vai pēc veiksmīga pirkuma izsūtīt informatīvu paziņojumu uz serveri?
+*/
+$c[$p]['ingame']['notifications'] = true;
+/*
+    Kādu ziņu izsūtīt uz serveri?
+*/
+$c[$p]['ingame']['message'] = "<NICKNAME> tikko nopirka admin statusu izmantojot SMS veikalu!";
+
+
+// iekš config.amx.php ieslēdz `showservers`, lai uzzinātu serveru id
 $c[$p]['prices'] = array(
-    0 => array(
+    1 => array(
     	80 => 5,
     	100 => 15,
     	160 => 30,
@@ -48,7 +59,7 @@ $c['lang'][$p]['lv'] = array(
     "error_empty_code" => "Ievadi atslēgas kodu!",
     "error_invalid_code" => "Atslēgas kods nav pareizi sastādīts!",
     "error_price_not_listed" => "Izvēlētā cena nav atrasta priekš izvēlētā servera!",
-    "money_purchased" => "Admin statuss veiksmīgi iegādāts. Lai jauka spēlēšana!",
+    "money_purchased" => "Nauda veiksmīgi iegādāta. Lai jauka spēlēšana!",
 	# Forma
     "form_price" => "Cena",
     "form_code" => "Atslēgas kods",
@@ -63,7 +74,7 @@ $c['lang'][$p]['lv'] = array(
 	# Tabula
     "table_nickname" => "Spēlētājs",
     "table_server" => "Serveris",
-    "table_money" => "Nauda",
+    "table_flags" => "Flagi",
     "table_date" => "Datums",
     "table_no_buyers" => "Neviens vēl nav iegādājies naudu. Varbūt vēlies būt pirmais?"
 );
@@ -77,7 +88,7 @@ $c['lang'][$p]['en'] = array(
 	"error_empty_code" => "Enter the unlock code!",
 	"error_invalid_code" => "The format of the unlock code is not valid!",
 	"error_price_not_listed" => "The selected price has not been found for the selected server!",
-	"money_purchased" => "Admin was purchased successfully. Have fun!",
+	"money_purchased" => "The money was purchased successfully. Have fun!",
 	# Forma
 	"form_price" => "Price",
 	"form_code" => "Unlock code",
@@ -92,13 +103,13 @@ $c['lang'][$p]['en'] = array(
 	# Tabula
 	"table_nickname" => "Player",
     "table_server" => "Server",
-    "table_money" => "Money",
+    "table_flags" => "Flags",
     "table_date" => "Date",
     "table_no_buyers" => "No one has bought any money yet. Would you like to be the first?"
 );
 /*
 -----------------------------------------------------
-    AMX naudas spraudņa konfigurācija
+    Minecraft naudas spraudņa konfigurācija
 -----------------------------------------------------
 */
 $db = new db($amx['db']['host'], $amx['db']['username'], $amx['db']['password'], $amx['db']['database']);
@@ -142,15 +153,25 @@ if(isset($_POST['code'])):
 		$baltsms->setCode($_POST['code']);
 		$baltsms->sendRequest();
 		if($baltsms->getResponse() === true){
-			$db->insert("INSERT INTO `" . $c[$p]['db']['table'] . "` (`nickname`, `server`, `access`, `time`, `expires`) VALUES (?, ?, ?, ?, ?)", array(
+			
+			if($c[$p]['ingame']['notifications'] === true){
+				$sendMessage = str_replace('<NICKNAME>', $_POST['nickname'], $c[$p]['ingame']['message']);
+			}else{
+				$sendMessage = false;
+			}
+			
+			$addAdmin = $amxclass->addAccessToPlayer($_POST['nickname'], $_POST['password'], $c[$p]['prices'][$_POST['server']][$_POST['price']], $c[$p]['sms']['access'], $_POST['server']);
+			$db->insert("INSERT INTO `" . $c[$p]['db']['table'] . "` (`nickname`, `player_id`, `server`, `access`, `time`, `expires`) VALUES (?, ?, ?, ?, ?, ?)", array(
 				$_POST['nickname'],
+				$addAdmin,
 				$_POST['server'],
 				$c[$p]['sms']['access'],
 				time(),
 				strtotime('+' . $c[$p]['prices'][$_POST['server']][$_POST['price']] . ' days', time())
-				));
+			));
 			
-			$amxclass->addAccessToPlayer($_POST['nickname'], $_POST['password'], $c[$p]['prices'][$_POST['server']][$_POST['price']], $c[$p]['sms']['access'], $_POST['server']);
+			$amxclass->send_chat($_POST['server'], $sendMessage);
+			$amxclass->send_chat($_POST['server'], 'Lūdzu, ienāc pa jaunam serverī, lai ADMIN privilēģijas stātos spēkā!', 'amx_psay "' . $_POST['nickname'] . '"');
 			
 			echo baltsms::alert($lang[$p]['money_purchased'], "success");
 			?>
@@ -190,7 +211,9 @@ if(isset($_POST['code'])):
 				<select class="form-control" name="server" onChange="listPrices('none', this.value);">
 					<option selected disabled><?php echo $lang[$p]['form_server']; ?></option>
 					<?php foreach($c[$p]['prices'] as $server => $data): ?>
-						<option value="<?php echo $server; ?>"><?php echo $amx['servers'][$server]['title']; ?></option>
+						<?php if($amx['servers'][$server]['show'] !== false): ?>
+							<option value="<?php echo $server; ?>"><?php echo $amx['servers'][$server]['title']; ?></option>
+						<?php endif; ?>
 					<?php endforeach; ?>
 				</select>
 			</div>
@@ -249,7 +272,7 @@ if(isset($_POST['code'])):
 				<th><?php echo $lang[$p]['table_nickname']; ?></th>
 				<th><?php echo $lang[$p]['table_server']; ?></th>
 				<th><?php echo $lang[$p]['table_date']; ?></th>
-				<th><?php echo $lang[$p]['table_money']; ?></th>
+				<th><?php echo $lang[$p]['table_flags']; ?></th>
 			</thead>
 			<tbody>
 				<?php $buyers = $db->fetchAll("SELECT * FROM `" . $c[$p]['db']['table'] . "` ORDER BY `time` DESC"); ?>
@@ -258,14 +281,24 @@ if(isset($_POST['code'])):
 						<td colspan="4"><?php echo $lang[$p]['table_no_buyers']; ?></td>
 					</tr>
 				<?php else: ?>
-					<?php foreach($buyers as $buyer): ?>
+					<?php
+					foreach($buyers as $buyer){
+						if($buyer['expires'] < time()){
+							if($amx['servers'][$buyer['server']]['show'] != false){
+								$removeplayer = $amxclass->removeAccessToPlayer($buyer['player_id'], $buyer['server']);
+								if($removeplayer == true){
+									$db->delete("DELETE FROM `" . $c[$p]['db']['table'] . "` WHERE `id` = ?", array($buyer['id']));
+								}
+							}
+						}
+					?>
 						<tr>
 							<td><?php echo htmlspecialchars($buyer['nickname']); ?></td>
 							<td><?php echo $amx['servers'][$buyer['server']]['title'] ?></td>
-							<td><?php echo date("d/m/y H:i", $buyer['time']); ?></td>
-							<td><?php echo $buyer['amount']; ?></td>
+							<td><?php echo date("d/m/y H:i", $buyer['time']) . ($buyer['expires'] ? ' - ' . date("d/m/y H:i", $buyer['expires']) : ''); ?></td>
+							<td><?php echo $buyer['access']; ?></td>
 						</tr>
-					<?php endforeach; ?>
+					<?php } ?>
 				<?php endif; ?>
 			</tbody>
 		</table>

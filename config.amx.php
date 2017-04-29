@@ -21,40 +21,53 @@ Konfigurāciju rediģēt drīkst pēc šīs līnijas
 /*
     Datubāzes servera adrese, pēc noklusējuma "localhost"
 */
-$amx['db']['host'] = "";
+$amx['db']['host'] = "localhost";
 
 /*
     Datubāzes pieejas lietotājvārds
 */
-$amx['db']['username'] = "";
+$amx['db']['username'] = "pwslv";
 
 /*
     Datubāzes pieejas parole
 */
-$amx['db']['password'] = "";
+$amx['db']['password'] = "HmZ5X9mTBIsz";
 
 /*
-    Datubāzes nosaukums, kur atrodas servera dati
+    Datubāzes nosaukums
 */
-$amx['db']['database'] = "";
+$amx['db']['database'] = "pwslv_gecms";
 
-$amx['directory'] = '/home/pwslv/public_html/amxbans'; // pilna norāde uz amxbans direktoroju. BEZ slīpsvītras beigās. 
 
-$amxclass = new amxbans($amx['directory']);
+$amx['showservers'] = false;
 
-$amx['servers'] = $amxclass->getServers();
+$amx['directory'] = '/home/dir/public_html/amxbans'; // pilna norāde uz amxbans direktoroju. BEZ slīpsvītras beigās. 
+
+
+$amxclass = new amxbans($amx['directory']); // pieslēdzamies AMXBANS klasei, norādot direktoriju
+$amx['servers'] = $amxclass->getServers(); // iegūstam serverus no AMXBANS datubāzes
 
 foreach($amx['servers'] as $type => $data){
-	if(!empty($data->query_port) AND file_exists($amx['directory'])){
+	if(file_exists($amx['directory'])){
 		if(file_exists($c['dir'] . '/system/amxclass/rcon_hl_net.inc')){
-			require $c['dir'] . '/system/amxclass/rcon_hl_net.inc';
-			
+			require_once $c['dir'] . '/system/amxclass/rcon_hl_net.inc';
 			$amx['rcon'][$type] = new Rcon();
 			$amx['rcon'][$type]->Connect($data['ip'], $data['port'], $data['rcon']);
-			if(!$amx['rcon'][$type]->Info()){
-				$data->show = false;
-				echo baltsms::alert("Nav iespējams savienoties ar AMX serveri: <strong>" . $data['title'] . "</strong>. Pārbaudi pieejas datus!", "danger");
+			if(!$amx['rcon'][$type]->IsConnected()){
+				$amx['servers'][$type]['show'] = false;
+				echo baltsms::alert("Nav iespējams savienoties ar AMX serveri: <strong>" . $data['title'] . "</strong> (id:".$type."). Pārbaudi pieejas datus!", "danger");
 			}
+			$amx['rcon'][$type]->Disconnect();
 		}
+	}
+}
+
+if($amx['showservers'] === true){
+	if(is_array($amx['servers'])){
+		echo '<ul>';
+		foreach($amx['servers'] as $id => $data){
+			echo '<li>id: <b>'.$id.'</b> - <b>'.$data['title'].'</b></li>';
+		}
+		echo '</ul>';
 	}
 }

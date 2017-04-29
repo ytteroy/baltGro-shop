@@ -18,18 +18,12 @@
 //License along with this library; if not, write to the Free Software
 //Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // ************************************************************************
-//
-// 2009 by |PJ|ShOrTy
-//		fixed protocol since HL1 Update 2008
-//		fixed multible packet handling
-//		added special functions to communicate with amxbans plugin
-//
-//
+
 class Rcon
 {
 
-  var $itap_confhallenge_number;
-  var $itap_confonnected;
+  var $challenge_number;
+  var $connected;
   var $server_ip;
   var $server_password;
   var $server_port;
@@ -80,8 +74,8 @@ class Rcon
   function Disconnect()
   {
     //close socket
-    @fclose($this->socket);
-    $itap_confonnected = false;
+    fclose($this->socket);
+    $connected = false;
 
   } //function Disconnect()
 
@@ -92,23 +86,7 @@ class Rcon
     return $this->connected;
   } //function IsConnected()
 
-  private function get_challenge() {
-	  if($this->challenge_number == "")
-		{
-		  //send request of challenge number
-		  $itap_confhallenge = "\xff\xff\xff\xffchallenge rcon\n";
-		  $buffer = $this->Communicate($itap_confhallenge);
-		  
-		  //If no connection is open
-		  if(trim($buffer) == "")
-		  {
-			$this->connected = false;
-			return false;
-		  }
-		  //get challenge number
-		  $this->challenge_number = trim(substr($buffer,15));
-		}
-  }
+
   //Get detailed player info via rcon
   function ServerInfo()
   {
@@ -210,10 +188,10 @@ class Rcon
 
     //Split Maplist in rows
     $line = explode("\n", $maps);
-    $itap_confount = sizeof($line) - 4;
+    $count = sizeof($line) - 4;
 
     //format maps
-    for($i = 0; $i <= $itap_confount; $i++)
+    for($i = 0; $i <= $count; $i++)
     {
       $text = $line[$i];
 
@@ -243,13 +221,14 @@ class Rcon
 
       } //else if(strstr($text, "(fs)"))
 
-    } //for($i = 1; $i <= $itap_confount; $i++)
+    } //for($i = 1; $i <= $count; $i++)
 
 
     //return formatted result
     return $result;
 
   } //function ServerMaps()
+
 
   //Get server info via info protocoll
   function Info()
@@ -259,8 +238,8 @@ class Rcon
       return $this->connected;
 
     //send info command
-    $itap_confommand = "\xff\xff\xff\xffTSource Engine Query\x00";
-    $buffer = $this->Communicate($itap_confommand);
+    $command = "\xff\xff\xff\xffTSource Engine Query\0\x00";
+    $buffer = $this->Communicate($command);
 
     //If no connection is open
     if(trim($buffer) == "")
@@ -270,109 +249,21 @@ class Rcon
     }
 
     //build info array
-	$pos=0;
-    $result["type"] = $this->parse_buffer($buffer,$pos,"bytestr");
-	
-	if ($result["type"] == 'I')
-	{
-		$result["version"] = $this->parse_buffer($buffer,$pos,"byte");
-		$result["name"] = $this->parse_buffer($buffer,$pos,"string");
-		$result["map"] = $this->parse_buffer($buffer,$pos,"string");
-		$result["mod"] = $this->parse_buffer($buffer,$pos,"string");
-		$result["game"] = $this->parse_buffer($buffer,$pos,"string");
-		$result["appid"] = $this->parse_buffer($buffer,$pos,"short");
-		$result["activeplayers"] = $this->parse_buffer($buffer,$pos,"byte");
-		$result["maxplayers"] = $this->parse_buffer($buffer,$pos,"byte");
-		$result["botplayers"] = $this->parse_buffer($buffer,$pos,"byte");
-		$result["dedicated"] = $this->parse_buffer($buffer,$pos,"bytestr");
-		$result["os"] = $this->parse_buffer($buffer,$pos,"bytestr");
-		$result["password"] = $this->parse_buffer($buffer,$pos,"byte");
-		$result["secure"] = $this->parse_buffer($buffer,$pos,"byte");
-		$result["sversion"] = $this->parse_buffer($buffer,$pos,"string");
-		$result["edf"] = $this->parse_buffer($buffer,$pos,"byte");
-		switch ($result["edf"]) {
-			case '\x80': // The server's game port # is included 
-				$result["port"]= $this->parse_buffer($buffer,$pos,"short");
-				break;
-			case '\x40': // The spectator port # and then the spectator server name are included 
-				$result["specport"]= $this->parse_buffer($buffer,$pos,"short");
-				$result["specservername"] = $this->parse_buffer($buffer,$pos,"string");
-				break;
-			case '\x20': // The game tag data string for the server is included [future use] 
-				$result["gametagdata"] = $this->parse_buffer($buffer,$pos,"string");
-		}
-	}
-	else
-	{	
-		$result['adress'] = $this->parse_buffer($buffer,$pos,"string");
-		$result['name'] = $this->parse_buffer($buffer,$pos,"string");
-		$result['map'] = $this->parse_buffer($buffer,$pos,"string");
-		$result['mod'] = $this->parse_buffer($buffer,$pos,"string");
-		$result['game'] = $this->parse_buffer($buffer,$pos,"string");
-		$result['activeplayers'] = $this->parse_buffer($buffer,$pos,"byte");
-		$result['maxplayers'] = $this->parse_buffer($buffer,$pos,"byte");
-		$result['protocol'] = $this->parse_buffer($buffer,$pos,"byte");
-		$result['dedicated'] = $this->parse_buffer($buffer,$pos,"bytestr");
-		$result['os'] = $this->parse_buffer($buffer,$pos,"bytestr");
-		$result['password'] = $this->parse_buffer($buffer,$pos,"byte");
-		$result['modrunning'] = $this->parse_buffer($buffer,$pos,"byte");
-		$result['modurl'] = $this->parse_buffer($buffer,$pos,"string");
-		$this->parse_buffer($buffer,$pos,"byte");
-		$this->parse_buffer($buffer,$pos,"byte");
-		$this->parse_buffer($buffer,$pos,"byte");
-		$this->parse_buffer($buffer,$pos,"byte");
-		$this->parse_buffer($buffer,$pos,"byte");
-		$this->parse_buffer($buffer,$pos,"byte");
-		$this->parse_buffer($buffer,$pos,"byte");
-		$this->parse_buffer($buffer,$pos,"byte");
-		$this->parse_buffer($buffer,$pos,"byte");
-		$this->parse_buffer($buffer,$pos,"byte");
-		$result["secure"] = $this->parse_buffer($buffer,$pos,"byte");
-		$result["botplayers"] = $this->parse_buffer($buffer,$pos,"byte");
-	}
-	$this->Communicate("");
+    $buffer = explode("\x00", $buffer);
+
+    $result["ip"] = substr($buffer[0], 5);
+    $result["name"] = $buffer[1];
+    $result["map"] = $buffer[2];
+    $result["mod"] = $buffer[3];
+    $result["game"] = $buffer[4];
+    $result["activeplayers"] = (strlen($buffer[5]) > 1)?ord($buffer[5][0]):"0";
+    $result["maxplayers"] = (strlen($buffer[5]) > 1)?ord($buffer[5][1]):"0";
+
     //return formatted result
     return $result;
 
   } //function Info()
 
-	function parse_buffer($buffer,&$pos,$type) {
-		$result = '';
-		switch ($type) {
-			case 'string':
-					while ( substr($buffer, $pos,1) !== "\x00" )
-					{
-						$result .= substr($buffer, $pos,1);
-						$pos++;
-					}
-					break;
-			case 'short':
-					$result = ord(substr($buffer, $pos,1)) +
-							(ord(substr($buffer, $pos+1,1)) << 8);
-					$pos++;
-					break;
-			case 'long':		
-					 $result = ord($buffer[$pos]) +
-                            (ord($buffer[$pos + 1]) << 8) +
-                            (ord($buffer[$pos + 2]) << 16) +
-                            (ord($buffer[$pos + 3]) << 24);
-					$pos+=3;
-					break;
-			case 'byte':
-					$result = ord(substr($buffer, $pos,1));
-					break;
-			case 'bytestr':
-					$result = substr($buffer, $pos,1);
-					break;
-			case 'float':
-					$tmptime = @unpack('ftime', substr($buffer, $pos, 4));
-					$result = date('H:i:s', round($tmptime['time'], 0) + 82800);
-					$pos+=3;
-					break;
-		}
-		$pos++;
-		return $result;
-	}
 
   //Get players via info protocoll
   function Players()
@@ -380,50 +271,41 @@ class Rcon
     //If there is no open connection return false
     if(!$this->connected)
       return $this->connected;
-	//get challenge number
-    if($this->challenge_number == "")
-    {
-      //send request of challenge number
-      $itap_confhallenge = "\xff\xff\xff\xff\x55\xff\xff\xff\xff";
-      $buffer = $this->Communicate($itap_confhallenge);
 
-      //If no connection is open
-      if(trim($buffer) == "")
-      {
-        $this->connected = false;
-        return false;
-      }
-
-      //get challenge number
-      $this->challenge_number = substr($buffer,1,4);
-    }
     //send players command
-    $itap_confommand = "\xff\xff\xff\xff\x55$this->challenge_number";
-    $buffer = $this->Communicate($itap_confommand);
-	
+    $command = "\xff\xff\xff\xffD\x00";
+    $buffer = $this->Communicate($command);
+
     //If no connection is open
     if(trim($buffer) == "")
     {
       $this->connected = false;
       return false;
     }
+
     //get number of online players
-    #$buffer = substr($buffer, 1);
-	$pos=0;
-	$header = $this->parse_buffer($buffer,$pos,"bytestr");
-	$numpl = $this->parse_buffer($buffer,$pos,"byte");
-	
-	//build players array
-	if($header!='D') return;
-	$result=array();
-	for($i = 0; $i < $numpl; $i++)
-	{
-		$result[$i]["index"] = $this->parse_buffer($buffer,$pos,"byte");
-		$result[$i]["name"] = $this->parse_buffer($buffer,$pos,"string");
-		$result[$i]["frag"] = $this->parse_buffer($buffer,$pos,"long");
-		$result[$i]["time"] = $this->parse_buffer($buffer,$pos,"float");
-	} 
-	
+    $buffer = substr($buffer, 1);
+
+    //build players array
+    for($i = 1; strlen($buffer) > 0; $i++)
+    {
+      //playername
+      $tmp = strpos($buffer, "\x00");
+      $result[$i]["name"] = substr($buffer, 1, $tmp);
+
+      //frag count
+      $result[$i]["frag"] = ord($buffer[$tmp + 1]) +
+                           (ord($buffer[$tmp + 2]) << 8) +
+                           (ord($buffer[$tmp + 3]) << 16) +
+                           (ord($buffer[$tmp + 4]) << 24);
+
+      //online time
+      $tmptime = @unpack('ftime', substr($buffer, $tmp + 5, 4));
+      $result[$i]["time"] = date('i:s', round($tmptime['time'], 0) + 82800);
+
+      $buffer = substr($buffer, $tmp + 9);
+    } //for($i = 1; $i <= $count; $i++)
+
     //return formatted result
     return $result;
 
@@ -436,26 +318,10 @@ class Rcon
     //If there is no open connection return false
     if(!$this->connected)
       return $this->connected;
-	  
-	if($this->challenge_number == "")
-    {
-      //send request of challenge number
-      $itap_confhallenge = "\xff\xff\xff\xff\x56\xff\xff\xff\xff";
-      $buffer = $this->Communicate($itap_confhallenge);
 
-      //If no connection is open
-      if(trim($buffer) == "")
-      {
-        $this->connected = false;
-        return false;
-      }
-
-      //get challenge number
-      $this->challenge_number = substr($buffer,1,4);
-    }
     //build info command
-    $itap_confommand = "\xff\xff\xff\xff\x56$this->challenge_number\x00";
-    $buffer = $this->Communicate($itap_confommand);
+    $command = "\xff\xff\xff\xffE\x00";
+    $buffer = $this->Communicate($command);
 
     //If no connection is open
     if(trim($buffer) == "")
@@ -473,10 +339,10 @@ class Rcon
     for($i = 0; $i < $buffer_count; $i++)
     {
       $result[$buffer[2 * $i]] = $buffer[2 * $i + 1];
-	  
     }
+
     //sort rules
-    #asort($result);
+    ksort($result);
 
     //return formatted result
     return $result;
@@ -485,16 +351,33 @@ class Rcon
 
 
   //Execute rcon command on open socket $fp
-  function RconCommand($itap_confommand, $pagenumber = 0, $single = true)
+  function RconCommand($command, $pagenumber = 0, $single = true)
   {
     //If there is no open connection return false
     if(!$this->connected)
       return $this->connected;
 
     //get challenge number
-	$this->get_challenge();
-    
-    $itap_confommand = "\xff\xff\xff\xffrcon $this->challenge_number \"$this->server_password\" $itap_confommand\n";
+    if($this->challenge_number == "")
+    {
+      //send request of challenge number
+      $challenge = "\xff\xff\xff\xffchallenge rcon\n";
+      $buffer = $this->Communicate($challenge);
+
+      //If no connection is open
+      if(trim($buffer) == "")
+      {
+        $this->connected = false;
+        return false;
+      }
+
+      //get challenge number
+      $buffer = explode(" ", $buffer);
+      $this->challenge_number = trim($buffer[2]);
+    }
+
+    //build command
+    $command = "\xff\xff\xff\xffrcon $this->challenge_number \"$this->server_password\" $command\n";
 
     //get specified page
     $result = "";
@@ -502,7 +385,7 @@ class Rcon
     while($pagenumber >= 0)
     {
       //send rcon command
-      $buffer .= substr($this->Communicate($itap_confommand),1);
+      $buffer .= $this->Communicate($command);
 
       //get only one package
       if($single == true)
@@ -513,91 +396,20 @@ class Rcon
         $result .= $buffer;
 
       //clear command for higher iterations
-      $itap_confommand = "";
+      $command = "";
 
       $pagenumber--;
 
     } //while($pagenumber >= 0)
-	
-	//to get more than 1 page from rcon
-	
-	//write command on socket
-    // // // // if($itap_confommand != "")
-      // // // // fputs($this->socket, $itap_confommand, strlen($itap_confommand));
-
-    // // // // //get results from server
-    // // // // $buffer = fread ($this->socket, 1);
-    // // // // $status = socket_get_status($this->socket);
-
-    // // // // // Sander's fix:
-    // // // // while ($status["unread_bytes"] > 0 && $timeout < 10) {
-		// // // // //get results from server
-    	// // // // $buffer .= fread($this->socket, $status["unread_bytes"]);
-		// // // // $result .= substr($buffer,5);
-		// // // // //echo "######".substr($buffer,20)."#########<br>";
-		// // // // $buffer = fread ($this->socket, 1);
-		// // // // $status = socket_get_status($this->socket);
-		// // // // //echo $status["unread_bytes"];
-		// // // // $timeout++;
-		// // // // //echo $timeout;
-
-    // // // // }
-	//echo $buffer;
 
     //return unformatted result
     return trim($result);
 
-  } //function RconCommand ($itap_confommand)
+  } //function RconCommand ($command)
 
-  //AMXBans function to get the online players with more infos
-  function ServerPlayers()
-  {
-    //If there is no open connection return false
-    if(!$this->connected)
-      return $this->connected;
-
-    //get challenge number
-	$this->get_challenge();
-	
-    //get specified page
-    $result = "";
-    $buffer = "";
-	
-	//write command on socket
-	$itap_confommand="\xff\xff\xff\xffrcon $this->challenge_number \"$this->server_password\" amx_list\n";
-    fputs($this->socket, $itap_confommand, strlen($itap_confommand));
-	
-    //get first results from server
-    $buffer = fread ($this->socket, 1);
-    $status = socket_get_status($this->socket);
-	
-	$max=0;
-	//try to get more results
-    while ($status["unread_bytes"] > 0 && $max <= 2) {
-		//get results from server
-		$end="\xfb\xfb\xfb\xfb";
-    	$buffer .= fread($this->socket, $status["unread_bytes"]);
-		$result .= substr($buffer,5);
-		
-		//search for the last packet from plugin
-		if(stristr($buffer,$end)!==false) {
-			$result=str_replace($end,"",$result);
-			break;
-		}
-		
-		//get new socket status
-		$buffer = fread ($this->socket, 1);
-		$status = socket_get_status($this->socket);
-		$max++;
-    }
-	
-    //return unformatted result
-    return trim($result);
-
-  } //function RconCommand ($itap_confommand)
 
   //Communication between PHPrcon and the Gameserver
-  function Communicate($itap_confommand)
+  function Communicate($command)
   {
     //If there is no open connection return false
     if(!$this->connected)
@@ -605,73 +417,50 @@ class Rcon
 
 
     //write command on socket
-    if($itap_confommand != "")
-      fputs($this->socket, $itap_confommand, strlen($itap_confommand));
+    if($command != "")
+      fputs($this->socket, $command, strlen($command));
 
     //get results from server
     $buffer = fread ($this->socket, 1);
     $status = socket_get_status($this->socket);
 
+    // echo $this->socket.": ".$status["unread_bytes"] . "<br>";
+    // print_r($status);
     // Sander's fix:
     if ($status["unread_bytes"] > 0) {
-    	$buffer .= fread($this->socket, $status["unread_bytes"]);
+        $buffer .= fread($this->socket, $status["unread_bytes"]);
     }
-	
+
+
     //If there is another package waiting
     if(substr($buffer, 0, 4) == "\xfe\xff\xff\xff")
     {
-		//get requestid from split packages
-		$requestid=substr($buffer,4,4);
-		
-		//get number of packages
-		$po=ord(substr($buffer,8,1));
-		$panum=($po & 1) + ($po & 2) + ($po & 4) + ($po & 8);
-		
-		//get number from current package
-		$po=$po >> 4;
-		$pacur=($po & 1) + ($po & 2) + ($po & 4) + ($po & 8);
-		
-		//add the first package to the array
-		if($pacur==($panum-1)) {
-			$splitbuffer[$pacur]=substr($buffer,9);
-		} else {
-			$splitbuffer[$pacur]=substr($buffer,14);
-		}
-				
-		//get all missing packages, the fist one we have, so start with 1
-		for ($i=1;$i<$panum;$i++) {
-			//get next package
-			$buffer2 = fread ($this->socket, 1);
-			$status = socket_get_status($this->socket);
-			$buffer2 .= fread($this->socket, $status["unread_bytes"]);
-			
-			//get number from current package
-			$requestid2=substr($buffer,4,4);
-			$po=ord(substr($buffer2,8,1));
-			$po=$po >> 4;
-			$pacur=($po & 1) + ($po & 2) + ($po & 4) + ($po & 8);
-			
-			//check the requestid from every package and add to array
-			if($requestid==$requestid2) {
-				if($pacur==($panum-1)) {
-					$splitbuffer[$pacur]=substr($buffer2,9);
-				} else {
-					$splitbuffer[$pacur]=substr($buffer2,14);
-				}
-			}
-		}
-		//add to main packet, the array is ordered by package num
-		for($i=0;$i<$panum;$i++) $bufferret.=$splitbuffer[$i];
+      //get results from server
+      $buffer2 = fread ($this->socket, 1);
+      $status = socket_get_status($this->socket);
+      $buffer2 .= fread($this->socket, $status["unread_bytes"]);
+
+      //If the second one came first
+      if(strlen($buffer) > strlen($buffer2))
+        $buffer = substr($buffer, 14) . substr($buffer2, 9);
+      else
+        $buffer = substr($buffer2, 14) . substr($buffer, 9);
+
     }
 
     //In case there is only one package
     else
-      $bufferret = substr($buffer, 4);
+      $buffer = substr($buffer, 5);
 
-    //return complete package including the type byte
-    return $bufferret;
+
+    //return unformatted result
+    return $buffer;
 
   } //function Communicate($buffer)
+  
+  function __destruct(){
+		unset($this->Rcon);
+	}
 
 }
 

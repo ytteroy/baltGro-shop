@@ -143,17 +143,33 @@ class amxbans{
 				$this->reload_admins($server);
 			}
 			
+			return $newuserid;
+		}
+	}
+	
+	public function removeAccessToPlayer($playerid, $server){
+		$player_admin = $this->db->query("SELECT * FROM `".$this->dbprefix . $this->tables['admins']."` WHERE `id` = '".$playerid."'");
+		if($this->db->rows($player_admin)){
+			$this->db->query("DELETE FROM `".$this->dbprefix . $this->tables['admins']."` WHERE `id` = '".$playerid."'");
+			$this->db->query("DELETE FROM `".$this->dbprefix . $this->tables['admins-servers']."` WHERE `admin_id` = '".$playerid."'");
+			
+			$this->reload_admins($server);
+			
+			return 'removed';
+		}else{
+			return 'no';
 		}
 	}
 	
 	public function getServers($gametype = 'cstrike'){
-		$res = $this->db->query("SELECT `id`, `hostname` FROM `".$this->dbprefix . $this->tables['servers']."` WHERE `gametype` = '".$gametype."'");
+		$res = $this->db->query("SELECT `id`, `hostname`, `address`, `rcon` FROM `".$this->dbprefix . $this->tables['servers']."` WHERE `gametype` = '".$gametype."'");
 		if($this->db->rows($res)){
 			$row = $this->db->fetch($res);
 			
 			$allServers = [];
-			
-			array_push($allServers, ['title' => $row['hostname'], 'id' => $row['id']]);
+			$ipport = explode(':', $row['address']);
+			$data = ['title' => $row['hostname'], 'id' => $row['id'], 'ip' => $ipport[0], 'port' => $ipport[1], 'rcon' => $row['rcon'], 'show' => true];
+			$allServers[$row['id']] = ['title' => $row['hostname'], 'id' => $row['id'], 'ip' => $ipport[0], 'port' => $ipport[1], 'rcon' => $row['rcon'], 'show' => true];
 			
 			return $allServers;
 		}else{
@@ -162,11 +178,12 @@ class amxbans{
 	}
 	
 	public function reload_admins($server_id = 0, $showstatus = true){
-		if(file_exists('rcon_hl_net.inc')){
+		$answ = 'error';
+		if(file_exists(realpath(dirname(__FILE__)) . '/rcon_hl_net.inc')){
 			$server = $this->db->query("SELECT `address`, `rcon` FROM `".$this->dbprefix . $this->tables['servers']."` WHERE `id` = '".$server_id."'");
 			if($this->db->rows($server)){
 				$server = $this->db->fetch($server);
-				require 'rcon_hl_net.inc';
+				require_once realpath(dirname(__FILE__)) . '/rcon_hl_net.inc';
 				$ip_port = explode( ':', $server['address'] );
 				
 				$rcon = new Rcon();
@@ -186,5 +203,35 @@ class amxbans{
 		}
 		
 		return $answ;
+	}
+	
+	public function send_chat($server_id, $message, $type = 'say'){
+		$answ = 'error';
+		if(file_exists(realpath(dirname(__FILE__)) . '/rcon_hl_net.inc')){
+			$server = $this->db->query("SELECT `address`, `rcon` FROM `".$this->dbprefix . $this->tables['servers']."` WHERE `id` = '".$server_id."'");
+			if($this->db->rows($server)){
+				$server = $this->db->fetch($server);
+				require_once realpath(dirname(__FILE__)) . '/rcon_hl_net.inc';
+				$ip_port = explode( ':', $server['address'] );
+				
+				$rcon = new Rcon();
+				$rcon->Connect( $ip_port[0], $ip_port[1], $server['rcon']);
+				if($rcon->IsConnected() AND !empty($message)){
+					$rcon->RconCommand($type . ' ' . $message);
+					$rcon->Disconnect();
+					
+						$answ = 'message sent';
+					
+				}else{
+					$answ = 'Cannot connect to rcon';
+				}
+			}else{
+				echo 'Server not found';
+			}
+		}else{
+			$answ = 'rcon_hl_net.inc not found';
+		}
+		
+		return realpath(dirname(__FILE__));
 	}
 }

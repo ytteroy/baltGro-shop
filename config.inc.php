@@ -119,6 +119,8 @@ $c['lang']['lv'] = [
     "plugin-mc_register" => "Reģistrācija",
     "plugin-mc_say" => "Čata ziņa",
     "plugin-mc_crate" => "Crate keys",
+    "plugin-amx_admin" => "AMX admin",
+    "plugin-amx_vip" => "AMX VIP",
 	"pay_with_paypal" => "Maksāt ar Airtel Payhub",
     "plugin_not_found" => "[plugin-not-found] Spraudnis netika atrasts. Pārbaudi vai fails <strong>plugins/<PLUGIN></strong> eksistē!"
 ];
@@ -142,6 +144,8 @@ $c['lang']['en'] = [
     "plugin-mc_register" => "Registration",
     "plugin-mc_say" => "Chat message",
     "plugin-mc_crate" => "Crate keys",
+	"plugin-amx_admin" => "AMX admin",
+    "plugin-amx_vip" => "AMX VIP",
 	"pay_with_paypal" => "Pay with Airtel Payhub",
     "plugin_not_found" => "[plugin-not-found] Plugin was not found. Check if the file <strong>plugins/<PLUGIN></strong> exists!"
 ];

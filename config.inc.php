@@ -64,6 +64,10 @@ $c['sms']['plugins'] = array(
         "mc_unban",
         "mc_money",
     ],
+	"amx" => [
+		"amx_vip",
+		"amx_admin",
+	],
 );
 
 /*

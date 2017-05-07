@@ -1,16 +1,17 @@
 <?php
-
 class amxbans{
 	protected $db;
 	protected $config;
 	private $path = '';
 	
 	function __construct($path, $md5 = false, $flags = 'a', $reloadadmins = true, $version = 6){
+		global $c;
+		
 		if (!isset($config)) 
 			$config = new stdClass();
 		include $path . '/include/db.config.inc.php';
 		
-		require 'db.class.php';
+		include $c['dir'] . '/system/amxclass/db.class.php';
 		$this->db = new amxdb($config->db_host, $config->db_user, $config->db_pass, $config->db_db);
 		
 		$this->dbprefix = (isset($config->db_prefix) ? $config->db_prefix . '_' : '');

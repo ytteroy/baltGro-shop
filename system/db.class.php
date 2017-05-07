@@ -6,7 +6,7 @@
  * 1.0 - Palaista pirmā versija, kura ļauj savienoties vienai datubāzei un izsūtīt izmantotākās komandas
  * 2.0 - Pievienota opcija ar konstrukēšanu palaist dažādas datubāzes uz dažādiem mainīgajiem
 */
-
+if (!class_exists('db')) {
 class db{
 	# Datubāzes hostētāja adrese
 	protected $host;
@@ -172,4 +172,5 @@ class db{
 			return false;
 		}
 	}
+}
 }

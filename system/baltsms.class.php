@@ -80,6 +80,20 @@ class baltsms{
 		$this->code = $code;
 	}
 	
+	private function getUserIP() {
+		if( array_key_exists('HTTP_X_FORWARDED_FOR', $_SERVER) && !empty($_SERVER['HTTP_X_FORWARDED_FOR']) ) {
+			if (strpos($_SERVER['HTTP_X_FORWARDED_FOR'], ',')>0) {
+				$addr = explode(",",$_SERVER['HTTP_X_FORWARDED_FOR']);
+				return trim($addr[0]);
+			} else {
+				return $_SERVER['HTTP_X_FORWARDED_FOR'];
+			}
+		}
+		else {
+			return $_SERVER['REMOTE_ADDR'];
+		}
+	}
+	
 	private function baltGroupCall($url){
 		$curl = curl_init();
 		
@@ -87,7 +101,7 @@ class baltsms{
 		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($curl, CURLOPT_USERAGENT, 'baltGroupAPI/1.0'); // drošībai, bloķējam liekos pieprasījumus
 		curl_setopt($curl, CURLOPT_HTTPHEADER, array( // pievienojam mazu info par apmeklētāju un serveri
-			'User-Ip: ' . isset($_SERVER['HTTP_CF_CONNECTING_IP'])? $_SERVER['HTTP_CF_CONNECTING_IP'] : $_SERVER['REMOTE_ADDR'],
+			'User-Ip: ' . $this->getUserIP(),
 			'Server-Ip: ' . $_SERVER['SERVER_ADDR'],
 			'Server-Url: ' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'],
 		));

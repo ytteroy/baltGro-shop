@@ -99,6 +99,7 @@ class baltsms{
 		
 		curl_setopt($curl, CURLOPT_URL, $url);
 		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($curl, CURLOPT_VERBOSE, 1);
 		curl_setopt($curl, CURLOPT_USERAGENT, 'baltGroupAPI/1.0'); // drošībai, bloķējam liekos pieprasījumus
 		curl_setopt($curl, CURLOPT_HTTPHEADER, array( // pievienojam mazu info par apmeklētāju un serveri
 			'User-Ip: ' . $this->getUserIP(),

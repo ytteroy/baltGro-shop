@@ -10,10 +10,22 @@
     NEAIZTIKT! AUTOMĀTISKI DEFINĒTAS VĒRTĪBAS!
 */
 
+function is_ssl_active() {
+  if (isset($_SERVER['HTTP_CF_VISITOR'])) {
+    $cf_visitor = json_decode($_SERVER['HTTP_CF_VISITOR']);
+    if (isset($cf_visitor->scheme) && $cf_visitor->scheme == 'https') {
+      return true;
+    }
+  } else if (isset($_SERVER['HTTPS'])) {
+    return true;
+  }
+  return false;
+}
+
 define("config_present", true);
 $c = [];
 $c['dir'] = realpath(dirname(__FILE__));
-$c['url'] = "http" . ((!empty($_SERVER['HTTPS'])) ? "s" : "") . "://" . $_SERVER['SERVER_NAME'];
+$c['url'] = "http" . (is_ssl_active() ? "s" : "") . "://" . $_SERVER['SERVER_NAME'];
 
 /*
 -----------------------------------------------------
@@ -27,7 +39,7 @@ Konfigurāciju rediģēt drīkst pēc šīs līnijas
 $c['sms']['client_id'] = 1;
 
 /*
-    Šis ir Tavs baltgroup.eu kontroles paneļa reģistrētais atslēgas vārds, kurš tiks uzrādīts pie SMS sūtīšanas instrukcijām
+    Šis ir Tavs Airtel E-commerce kontroles paneļa reģistrētais atslēgas vārds, kurš tiks uzrādīts pie SMS sūtīšanas instrukcijām
 */
 $c['sms']['keyword'] = "ART";
 
@@ -54,7 +66,7 @@ $c['sms']['primary'] = "web";
 /*
     Šis ir spraudņu saraksts, kas tiek ievadīts masīvā. Lūdzu ievadi tos spraudņus, kurus vēlies redzēt savā veikalā un tos, kuri pastāv /plugins folderī
 */
-$c['sms']['plugins'] = array(
+$c['sms']['plugins'] = [
 	"web" => [
         "donate",
     ],
@@ -68,7 +80,7 @@ $c['sms']['plugins'] = array(
 		"amx_vip",
 		"amx_admin",
 	],
-);
+];
 
 /*
     Šī ir direktorija pēc ROOT direktorijas, kas noved uz SMS veikala failiem

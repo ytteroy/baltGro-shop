@@ -53,7 +53,7 @@
 	<script type="text/javascript">
 		var baltsms_url = "<?php echo $c['url'] . '/' . $c['page']['directory']; ?>";
 	</script>
-	<script src="<?php echo $c['url'] . '/' . $c['page']['directory']; ?>/assets/js/baltgro.js?<?php echo filemtime($c['dir'] . '/assets/js/baltsms.js'); ?>"></script>
+	<script src="<?php echo $c['url'] . '/' . $c['page']['directory']; ?>/assets/js/baltgro.js?<?php echo time(); ?>"></script>
 	<script type="text/javascript">
 		jQuery(document).ready(function(){
 			loadPlugin("<?php echo $c['sms']['plugins'][$c['sms']['primary']][0]; ?>");

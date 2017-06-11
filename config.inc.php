@@ -99,9 +99,14 @@ $c['page']['title'] = "Airtel veikals";
 $c['page']['debug'] = true;
 
 /*
-    Tava veikala platums - skaitļa vērtība tiks konvertēta un norādīta pikseļos
+    Tava veikala platums - tiek izmantoti bootstrap responsīvie elementi
+	
+	** ja ievadi šādi: [8, 2]
+	** tad kods būs šāds: col-md-8 col-md-offset-2
+	
+	dokumentācija: http://getbootstrap.com/css/#grid
 */
-$c['page']['width'] = 650;
+$c['page']['size'] = [8, 2];
 
 /*
     Šis ieslēdz valodas karodziņu izvēli, kas ļaus mainīt aplikācijas valodu (ieslēgt/izslēgt - true/false)

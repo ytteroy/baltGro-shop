@@ -104,6 +104,8 @@ if(isset($_POST['code'])):
 				$c[$p]['commands']['sendMessage']
 				);
 			$mc['rcon'][$_POST['server']]->send_command($sendMessage);
+			
+			$paymentStatus = 1;
 			echo baltsms::alert($lang[$p]['message_sent_successfully'], "success");
 			?>
 			<script type="text/javascript">
@@ -116,8 +118,11 @@ if(isset($_POST['code'])):
 			echo $baltsms->getResponse();
 		}
 	}
-	?>
-<?php else: ?>
+	
+	include '../system/sendstats.php';
+	
+	else:
+?>
 	<form class="form-horizontal" method="POST" id="<?php echo $p; ?>">
 		<div class="panel panel-border panel-contrast" id="instructions" style="display:none;"><div class="panel-heading panel-heading-contrast text-center"><?php echo baltsms::instructionTemplate($lang[$p]['instructions'], array("price" => baltsms::returnPrice(array_values($c[$p]['prices'])[0]), "code" => array_values($c[$p]['prices'])[0])); ?></div></div>
 		<div id="alerts"></div>

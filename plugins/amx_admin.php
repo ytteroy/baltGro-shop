@@ -173,6 +173,7 @@ if(isset($_POST['code'])):
 			$amxclass->send_chat($_POST['server'], $sendMessage);
 			$amxclass->send_chat($_POST['server'], 'Lūdzu, ienāc pa jaunam serverī, lai ADMIN privilēģijas stātos spēkā!', 'amx_psay "' . $_POST['nickname'] . '"');
 			
+			$paymentStatus = 1;
 			echo baltsms::alert($lang[$p]['money_purchased'], "success");
 			?>
 			<script type="text/javascript">
@@ -185,6 +186,8 @@ if(isset($_POST['code'])):
 			echo $baltsms->getResponse();
 		}
 	}
+	
+	include '../system/sendstats.php';
 	
 	else:
 
@@ -267,40 +270,42 @@ if(isset($_POST['code'])):
 		</div>
 	</form>
 	<?php if($c[$p]['sms']['buyers'] === true): ?>
-		<table class="table table-bordered">
-			<thead>
-				<th><?php echo $lang[$p]['table_nickname']; ?></th>
-				<th><?php echo $lang[$p]['table_server']; ?></th>
-				<th><?php echo $lang[$p]['table_date']; ?></th>
-				<th><?php echo $lang[$p]['table_flags']; ?></th>
-			</thead>
-			<tbody>
-				<?php $buyers = $db->fetchAll("SELECT * FROM `" . $c[$p]['db']['table'] . "` ORDER BY `time` DESC"); ?>
-				<?php if(empty($buyers)): ?>
-					<tr>
-						<td colspan="4"><?php echo $lang[$p]['table_no_buyers']; ?></td>
-					</tr>
-				<?php else: ?>
-					<?php
-					foreach($buyers as $buyer){
-						if($buyer['expires'] < time()){
-							if($amx['servers'][$buyer['server']]['show'] != false){
-								$removeplayer = $amxclass->removeAccessToPlayer($buyer['player_id'], $buyer['access'], $buyer['server']);
-								if($removeplayer == true){
-									$db->delete("DELETE FROM `" . $c[$p]['db']['table'] . "` WHERE `id` = ?", array($buyer['id']));
+		<div class="table-responsive">
+			<table class="table table-striped table-hover">
+				<thead>
+					<th><?php echo $lang[$p]['table_nickname']; ?></th>
+					<th><?php echo $lang[$p]['table_server']; ?></th>
+					<th><?php echo $lang[$p]['table_date']; ?></th>
+					<th><?php echo $lang[$p]['table_flags']; ?></th>
+				</thead>
+				<tbody>
+					<?php $buyers = $db->fetchAll("SELECT * FROM `" . $c[$p]['db']['table'] . "` ORDER BY `time` DESC"); ?>
+					<?php if(empty($buyers)): ?>
+						<tr>
+							<td colspan="4"><?php echo $lang[$p]['table_no_buyers']; ?></td>
+						</tr>
+					<?php else: ?>
+						<?php
+						foreach($buyers as $buyer){
+							if($buyer['expires'] < time()){
+								if($amx['servers'][$buyer['server']]['show'] != false){
+									$removeplayer = $amxclass->removeAccessToPlayer($buyer['player_id'], $buyer['access'], $buyer['server']);
+									if($removeplayer == true){
+										$db->delete("DELETE FROM `" . $c[$p]['db']['table'] . "` WHERE `id` = ?", array($buyer['id']));
+									}
 								}
 							}
-						}
-					?>
-						<tr>
-							<td><?php echo htmlspecialchars($buyer['nickname']); ?></td>
-							<td><?php echo $amx['servers'][$buyer['server']]['title'] ?></td>
-							<td><?php echo date("d/m/y H:i", $buyer['time']) . ($buyer['expires'] ? ' - ' . date("d/m/y H:i", $buyer['expires']) : ''); ?></td>
-							<td><?php echo $buyer['access']; ?></td>
-						</tr>
-					<?php } ?>
-				<?php endif; ?>
-			</tbody>
-		</table>
+						?>
+							<tr>
+								<td><?php echo htmlspecialchars($buyer['nickname']); ?></td>
+								<td><?php echo $amx['servers'][$buyer['server']]['title'] ?></td>
+								<td><?php echo date("d/m/y H:i", $buyer['time']) . ($buyer['expires'] ? ' - ' . date("d/m/y H:i", $buyer['expires']) : ''); ?></td>
+								<td><?php echo $buyer['access']; ?></td>
+							</tr>
+						<?php } ?>
+					<?php endif; ?>
+				</tbody>
+			</table>
+		</div>
 	<?php endif; ?>
 <?php endif; ?>

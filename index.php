@@ -7,8 +7,8 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	
 	<title><?php echo $c['page']['title']; ?></title>
-	<link rel="stylesheet" type="text/css" href="<?php echo $c['url'] . '/' . $c['page']['directory']; ?>/assets/css/baltgro.css">
 	<link rel="stylesheet" type="text/css" href="//cdn.airtel.lv/beagle/css/style.css">
+	<link rel="stylesheet" type="text/css" href="<?php echo $c['url'] . '/' . $c['page']['directory']; ?>/assets/css/baltgro.css">
 </head>
 <body class="baltsms">
 	<div class="col-md-<?php echo $c['page']['size'][0]; ?> col-md-offset-<?php echo $c['page']['size'][1]; ?>">

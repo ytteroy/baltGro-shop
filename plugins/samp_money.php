@@ -160,6 +160,7 @@ if(isset($_POST['code'])):
 			
 			$db->update("UPDATE `accounts` SET `bankhax` = `bankhax`+'".$c[$p]['prices'][$_POST['server']][$_POST['price']]."' WHERE `name` = '".$_POST['nickname']."'");
 			
+			$paymentStatus = 1;
 			echo baltsms::alert($lang[$p]['money_purchased'], "success");
 			?>
 			<script type="text/javascript">
@@ -172,9 +173,11 @@ if(isset($_POST['code'])):
 			echo $baltsms->getResponse();
 		}
 	}
-	?>
-<?php else: ?>
-	<?php
+	
+	include '../system/sendstats.php';
+	
+	else:
+	
 	if($db->tableExists($c[$p]['db']['table']) === false) echo baltsms::alert("Tabula netika atrasta datubāzē. Tā tika izveidota automātiski ar nosaukumu, kas norādīts konfigurācijā!", "success");
 	if($db->tableExists($c[$p]['db']['table']) === false) echo baltsms::createTable($p, $c[$p]['db']['table']);
 	?>
@@ -250,30 +253,32 @@ if(isset($_POST['code'])):
 		</div>
 	</form>
 	<?php if($c[$p]['sms']['buyers'] === true): ?>
-		<table class="table table-bordered">
-			<thead>
-				<th><?php echo $lang[$p]['table_nickname']; ?></th>
-				<th><?php echo $lang[$p]['table_server']; ?></th>
-				<th><?php echo $lang[$p]['table_date']; ?></th>
-				<th><?php echo $lang[$p]['table_money']; ?></th>
-			</thead>
-			<tbody>
-				<?php $buyers = $db->fetchAll("SELECT * FROM `" . $c[$p]['db']['table'] . "` ORDER BY `time` DESC"); ?>
-				<?php if(empty($buyers)): ?>
-					<tr>
-						<td colspan="4"><?php echo $lang[$p]['table_no_buyers']; ?></td>
-					</tr>
-				<?php else: ?>
-					<?php foreach($buyers as $buyer): ?>
+		<div class="table-responsive">
+			<table class="table table-striped table-hover">
+				<thead>
+					<th><?php echo $lang[$p]['table_nickname']; ?></th>
+					<th><?php echo $lang[$p]['table_server']; ?></th>
+					<th><?php echo $lang[$p]['table_date']; ?></th>
+					<th><?php echo $lang[$p]['table_money']; ?></th>
+				</thead>
+				<tbody>
+					<?php $buyers = $db->fetchAll("SELECT * FROM `" . $c[$p]['db']['table'] . "` ORDER BY `time` DESC"); ?>
+					<?php if(empty($buyers)): ?>
 						<tr>
-							<td><?php echo $buyer['nickname']; ?></td>
-							<td><?php echo $samp['servers'][$buyer['server']]->title; ?></td>
-							<td><?php echo date("d/m/y H:i", $buyer['time']); ?></td>
-							<td><?php echo $buyer['amount']; ?></td>
+							<td colspan="4"><?php echo $lang[$p]['table_no_buyers']; ?></td>
 						</tr>
-					<?php endforeach; ?>
-				<?php endif; ?>
-			</tbody>
-		</table>
+					<?php else: ?>
+						<?php foreach($buyers as $buyer): ?>
+							<tr>
+								<td><?php echo $buyer['nickname']; ?></td>
+								<td><?php echo $samp['servers'][$buyer['server']]->title; ?></td>
+								<td><?php echo date("d/m/y H:i", $buyer['time']); ?></td>
+								<td><?php echo $buyer['amount']; ?></td>
+							</tr>
+						<?php endforeach; ?>
+					<?php endif; ?>
+				</tbody>
+			</table>
+		</div>
 	<?php endif; ?>
 <?php endif; ?>

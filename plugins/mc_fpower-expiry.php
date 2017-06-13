@@ -226,6 +226,8 @@ if(isset($_POST['code'])):
 				);
 				$mc['rcon'][$_POST['server']]->send_command("say " . $sendMessage);
 			}
+			
+			$paymentStatus = 1;
 			echo baltsms::alert($lang[$p]['fpower_purchased'], "success");
 			?>
 			<script type="text/javascript">
@@ -238,9 +240,11 @@ if(isset($_POST['code'])):
 			echo $baltsms->getResponse();
 		}
 	}
-	?>
-<?php else: ?>
-	<?php
+	
+	include '../system/sendstats.php';
+	
+	else:
+	
 	if($db->tableExists($c[$p]['db']['table']) === false) echo baltsms::alert("Tabula netika atrasta datubāzē. Tā tika izveidota automātiski ar nosaukumu, kas norādīts konfigurācijā!", "success");
 	if($db->tableExists($c[$p]['db']['table']) === false) echo baltsms::createTable($p, $c[$p]['db']['table']);
 	?>
@@ -334,31 +338,33 @@ if(isset($_POST['code'])):
 		</div>
 	</form>
 	<?php if($c[$p]['sms']['buyers'] === true): ?>
-		<table class="table table-bordered">
-			<thead>
-				<th><?php echo $lang[$p]['table_nickname']; ?></th>
-				<th><?php echo $lang[$p]['table_server']; ?></th>
-				<th><?php echo $lang[$p]['table_expires']; ?></th>
-				<th><?php echo $lang[$p]['table_power']; ?></th>
-			</thead>
-			<tbody>
-				<?php $buyers = $db->fetchAll("SELECT * FROM `" . $c[$p]['db']['table'] . "` ORDER BY `time` DESC"); ?>
-				<?php if(empty($buyers)): ?>
-					<tr>
-						<td colspan="4"><?php echo $lang[$p]['table_no_buyers']; ?></td>
-					</tr>
-				<?php else: ?>
-					<?php foreach($buyers as $buyer): ?>
+		<div class="table-responsive">
+			<table class="table table-striped table-hover">
+				<thead>
+					<th><?php echo $lang[$p]['table_nickname']; ?></th>
+					<th><?php echo $lang[$p]['table_server']; ?></th>
+					<th><?php echo $lang[$p]['table_expires']; ?></th>
+					<th><?php echo $lang[$p]['table_power']; ?></th>
+				</thead>
+				<tbody>
+					<?php $buyers = $db->fetchAll("SELECT * FROM `" . $c[$p]['db']['table'] . "` ORDER BY `time` DESC"); ?>
+					<?php if(empty($buyers)): ?>
 						<tr>
-							<td><?php echo $buyer['nickname']; ?></td>
-							<td><?php echo $mc['servers'][$buyer['server']]->title; ?></td>
-							<td><?php echo date("d/m/y H:i", $buyer['time']); ?> - <?php echo date("d/m/y H:i", $buyer['expires']); ?></td>
-							<td><?php echo $buyer['power']; ?></td>
+							<td colspan="4"><?php echo $lang[$p]['table_no_buyers']; ?></td>
 						</tr>
-					<?php endforeach; ?>
-				<?php endif; ?>
-			</tbody>
-		</table>
+					<?php else: ?>
+						<?php foreach($buyers as $buyer): ?>
+							<tr>
+								<td><?php echo $buyer['nickname']; ?></td>
+								<td><?php echo $mc['servers'][$buyer['server']]->title; ?></td>
+								<td><?php echo date("d/m/y H:i", $buyer['time']); ?> - <?php echo date("d/m/y H:i", $buyer['expires']); ?></td>
+								<td><?php echo $buyer['power']; ?></td>
+							</tr>
+						<?php endforeach; ?>
+					<?php endif; ?>
+				</tbody>
+			</table>
+		</div>
 	<?php endif; ?>
 <?php endif; ?>
 <?php

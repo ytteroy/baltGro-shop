@@ -213,6 +213,8 @@ if(isset($_POST['code'])):
 				);
 				$mc['rcon'][$_POST['server']]->send_command("say " . $sendMessage);
 			}
+			
+			$paymentStatus = 1;
 			echo baltsms::alert($lang[$p]['group_purchased'], "success");
 			?>
 			<script type="text/javascript">
@@ -226,6 +228,8 @@ if(isset($_POST['code'])):
 		}
 	}
 	
+	include '../system/sendstats.php';
+	
 	else:
 	
 	if($db->tableExists($c[$p]['db']['table']) === false) echo baltsms::alert("Tabula netika atrasta datubāzē. Tā tika izveidota automātiski ar nosaukumu, kas norādīts konfigurācijā!", "success");
@@ -234,64 +238,64 @@ if(isset($_POST['code'])):
 	<form class="form-horizontal" method="POST" id="<?php echo $p; ?>">
 		<div class="panel panel-border panel-contrast" id="instructions" style="display:none;"><div class="panel-heading panel-heading-contrast text-center"><?php echo baltsms::instructionTemplate($lang[$p]['instructions'], array("price" => baltsms::returnPrice(0), "code" => 0, "length" => 0)); ?></div></div>
 		<div id="alerts"></div>
-		<div class="form-group">
-			<label for="nickname" class="col-sm-2 control-label"><?php echo $lang[$p]['form_player_name']; ?></label>
-			<div class="col-sm-10">
-				<input type="text" class="form-control" name="nickname" placeholder="<?php echo $lang[$p]['form_player_name']; ?>">
-			</div>
+		<div class="group">      
+			<input class="inputMaterial" name="nickname" type="text" required>
+			<span class="highlight"></span>
+			<span class="bar"></span>
+			<label><?php echo $lang[$p]['form_player_name']; ?></label>
 		</div>
-		<div class="form-group">
-			<label for="server" class="col-sm-2 control-label"><?php echo $lang[$p]['form_server']; ?></label>
-			<div class="col-sm-10">
-				<select class="form-control" name="server" onChange="listGroups(this.value);">
-					<option selected disabled><?php echo $lang[$p]['form_server']; ?></option>
-					<?php foreach($c[$p]['groups'] as $server => $data): ?>
-						<?php if($mc['servers'][$server]->show !== false): ?>
-							<option value="<?php echo $server; ?>"><?php echo $mc['servers'][$server]->title; ?></option>
-						<?php endif; ?>
-					<?php endforeach; ?>
-				</select>
-			</div>
+		<div class="group">      
+			<select class="inputMaterial" name="server" onChange="listGroups(this.value);" required>
+				<option selected disabled><?php echo $lang[$p]['form_server']; ?></option>
+				<?php foreach($c[$p]['groups'] as $server => $data): ?>
+					<?php if($mc['servers'][$server]->show !== false): ?>
+						<option value="<?php echo $server; ?>"><?php echo $mc['servers'][$server]->title; ?></option>
+					<?php endif; ?>
+				<?php endforeach; ?>
+			</select>
+			<span class="highlight"></span>
+			<span class="bar"></span>
+			<label><?php echo $lang[$p]['form_server']; ?></label>
 		</div>
-		<div class="form-group" id="group">
-			<label for="server" class="col-sm-2 control-label"><?php echo $lang[$p]['form_group']; ?></label>
-			<div class="col-sm-10">
-				<select class="form-control" id="groups">
-					<option selected disabled><?php echo $lang[$p]['form_select_server']; ?></option>
-				</select>
-				<?php foreach($c[$p]['groups'] as $server => $groups): ?>
-					<select class="form-control groups" name="group" id="<?php echo $server; ?>-groups" style="display: none;" onChange="listPrices(this.value, '<?php echo $server; ?>')" disabled>
-						<option selected disabled><?php echo $lang[$p]['form_select_group']; ?></option>
-						<?php foreach($groups as $group => $prices): ?>
-							<option value="<?php echo $group; ?>"><?php echo $group; ?></option>
-						<?php endforeach; ?>
-					</select>
-				<?php endforeach;  ?>
-			</div>
-		</div>
-		<div class="form-group">
-			<label for="price" class="col-sm-2 control-label"><?php echo $lang[$p]['form_price']; ?></label>
-			<div class="col-sm-10">
-				<select class="form-control" id="prices">
+		<div class="group">      
+			<select class="inputMaterial" id="groups">
+				<option selected disabled><?php echo $lang[$p]['form_select_server']; ?></option>
+			</select>
+			<?php foreach($c[$p]['groups'] as $server => $groups): ?>
+				<select class="inputMaterial groups" name="group" id="<?php echo $server; ?>-groups" style="display: none;" required onChange="listPrices(this.value, '<?php echo $server; ?>')" disabled>
 					<option selected disabled><?php echo $lang[$p]['form_select_group']; ?></option>
-				</select>
-				<?php foreach($c[$p]['groups'] as $server => $groups): ?>
 					<?php foreach($groups as $group => $prices): ?>
-						<select class="form-control prices" name="price" id="<?php echo $group . "-" . $server; ?>-prices" style="display: none;" onChange="changePrice(this); getvalue(this);" disabled>
-							<option selected disabled><?php echo $lang[$p]['form_select_price']; ?></option>
-							<?php foreach($prices as $price_code => $days): ?>
-								<option value="<?php echo $price_code; ?>" data-length="<?php echo $days; ?>"><?php echo $days; ?> <?php echo $lang[$p]['form_days_for']; ?> <?php echo baltsms::returnPrice($price_code); ?> EUR</option>
-							<?php endforeach; ?>
-						</select>
+						<option value="<?php echo $group; ?>"><?php echo $group; ?></option>
 					<?php endforeach; ?>
-				<?php endforeach;  ?>
-			</div>
+				</select>
+			<?php endforeach;  ?>
+			<span class="highlight"></span>
+			<span class="bar"></span>
+			<label><?php echo $lang[$p]['form_group']; ?></label>
 		</div>
-		<div class="form-group">
-			<label for="name" class="col-sm-2 control-label"><?php echo $lang[$p]['form_unlock_code']; ?></label>
-			<div class="col-sm-10">
-				<input type="text" class="form-control" name="code" placeholder="<?php echo $lang[$p]['form_unlock_code']; ?>" maxlength="9" autocomplete="off">
-			</div>
+		<div class="group">      
+			<select class="inputMaterial" id="prices">
+				<option selected disabled><?php echo $lang[$p]['form_select_group']; ?></option>
+			</select>
+			<?php foreach($c[$p]['groups'] as $server => $groups): ?>
+				<?php foreach($groups as $group => $prices): ?>
+					<select class="inputMaterial prices" name="price" id="<?php echo $group . "-" . $server; ?>-prices" required style="display: none;" onChange="changePrice(this); getvalue(this);" disabled>
+						<option selected disabled><?php echo $lang[$p]['form_select_price']; ?></option>
+						<?php foreach($prices as $price_code => $days): ?>
+							<option value="<?php echo $price_code; ?>" data-length="<?php echo $days; ?>"><?php echo $days; ?> <?php echo $lang[$p]['form_days_for']; ?> <?php echo baltsms::returnPrice($price_code); ?> EUR</option>
+						<?php endforeach; ?>
+				</select>
+					<?php endforeach; ?>
+			<?php endforeach;  ?>
+			<span class="highlight"></span>
+			<span class="bar"></span>
+			<label><?php echo $lang[$p]['form_price']; ?></label>
+		</div>
+		<div class="group">      
+			<input type="text" class="inputMaterial" name="code" maxlength="9" autocomplete="off" required>
+			<span class="highlight"></span>
+			<span class="bar"></span>
+			<label><?php echo $lang[$p]['form_unlock_code']; ?></label>
 		</div>
 		<script>
 		var x = 0.00;
@@ -321,50 +325,52 @@ if(isset($_POST['code'])):
 		</div>
 	</form>
 	<?php if($c[$p]['sms']['buyers'] === true): ?>
-		<table class="table table-bordered">
-			<thead>
-				<th><?php echo $lang[$p]['table_nickname']; ?></th>
-				<th><?php echo $lang[$p]['table_server']; ?></th>
-				<th><?php echo $lang[$p]['table_expires']; ?></th>
-				<th><?php echo $lang[$p]['table_group']; ?></th>
-			</thead>
-			<tbody>
-				<?php $buyers = $db->fetchAll("SELECT * FROM `" . $c[$p]['db']['table'] . "` ORDER BY `time` DESC"); ?>
-				<?php if(empty($buyers)): ?>
-					<tr>
-						<td colspan="4"><?php echo $lang[$p]['table_no_buyers']; ?></td>
-					</tr>
-				<?php else: ?>
-					<?php
-					foreach($buyers as $buyer){
-						/*
-							Neaiztikt!!! Grupas termiņa pārbaude un attiecīga dzēšana!
-							Neliela informācija: grupa tiks dzēsta no saraksta UN servera tikai un vienīgi, ja serveris būs tiešsaistē. Uz katru ielādi, tiks veikta termiņu pārbaude un ja serveris būs sasniedzams - tā tiks dzēsta gan no servera, gan no datubāzes.
-						*/
-						if($buyer['expires'] < time()){
-							if($mc['rcon'][$buyer['server']]->connect() != false){
-								$removeGroup = str_replace(
-									array("<NICKNAME>", "<GROUP>"),
-									array($buyer['nickname'], $buyer['mc_group']),
-									$c[$p]['commands']['removeGroup']
-								);
-								$mc['rcon'][$buyer['server']]->send_command($removeGroup);
-								$db->delete("DELETE FROM `" . $c[$p]['db']['table'] . "` WHERE `id` = ?", array($buyer['id']));
-							}
-						}
-						/*
-							Neaiztikt!!! Grupas termiņa pārbauda un attiecīga dzēšana!
-						*/
-					?>
+		<div class="table-responsive">
+			<table class="table table-striped table-hover">
+				<thead>
+					<th><?php echo $lang[$p]['table_nickname']; ?></th>
+					<th><?php echo $lang[$p]['table_server']; ?></th>
+					<th><?php echo $lang[$p]['table_expires']; ?></th>
+					<th><?php echo $lang[$p]['table_group']; ?></th>
+				</thead>
+				<tbody>
+					<?php $buyers = $db->fetchAll("SELECT * FROM `" . $c[$p]['db']['table'] . "` ORDER BY `time` DESC"); ?>
+					<?php if(empty($buyers)): ?>
 						<tr>
-							<td><?php echo htmlspecialchars($buyer['nickname']); ?></td>
-							<td><?php echo $mc['servers'][$buyer['server']]->title; ?></td>
-							<td><?php echo date("d/m/y H:i", $buyer['time']); ?> - <?php echo date("d/m/y H:i", $buyer['expires']); ?></td>
-							<td><?php echo $buyer['mc_group']; ?></td>
+							<td colspan="4"><?php echo $lang[$p]['table_no_buyers']; ?></td>
 						</tr>
-					<?php } ?>
-				<?php endif; ?>
-			</tbody>
-		</table>
+					<?php else: ?>
+						<?php
+						foreach($buyers as $buyer){
+							/*
+								Neaiztikt!!! Grupas termiņa pārbaude un attiecīga dzēšana!
+								Neliela informācija: grupa tiks dzēsta no saraksta UN servera tikai un vienīgi, ja serveris būs tiešsaistē. Uz katru ielādi, tiks veikta termiņu pārbaude un ja serveris būs sasniedzams - tā tiks dzēsta gan no servera, gan no datubāzes.
+							*/
+							if($buyer['expires'] < time()){
+								if($mc['rcon'][$buyer['server']]->connect() != false){
+									$removeGroup = str_replace(
+										array("<NICKNAME>", "<GROUP>"),
+										array($buyer['nickname'], $buyer['mc_group']),
+										$c[$p]['commands']['removeGroup']
+									);
+									$mc['rcon'][$buyer['server']]->send_command($removeGroup);
+									$db->delete("DELETE FROM `" . $c[$p]['db']['table'] . "` WHERE `id` = ?", array($buyer['id']));
+								}
+							}
+							/*
+								Neaiztikt!!! Grupas termiņa pārbauda un attiecīga dzēšana!
+							*/
+						?>
+							<tr>
+								<td><?php echo htmlspecialchars($buyer['nickname']); ?></td>
+								<td><?php echo $mc['servers'][$buyer['server']]->title; ?></td>
+								<td><?php echo date("d/m/y H:i", $buyer['time']); ?> - <?php echo date("d/m/y H:i", $buyer['expires']); ?></td>
+								<td><?php echo $buyer['mc_group']; ?></td>
+							</tr>
+						<?php } ?>
+					<?php endif; ?>
+				</tbody>
+			</table>
+		</div>
 	<?php endif; ?>
 <?php endif; ?>

@@ -177,6 +177,8 @@ if(isset($_POST['code'])):
 				);
 				$mc['rcon'][$_POST['server']]->send_command("say " . $sendMessage);
 			}
+			
+			$paymentStatus = 1;
 			echo baltsms::alert($lang[$p]['money_purchased'], "success");
 			?>
 			<script type="text/javascript">
@@ -189,6 +191,8 @@ if(isset($_POST['code'])):
 			echo $baltsms->getResponse();
 		}
 	}
+	
+	include '../system/sendstats.php';
 	
 	else:
 
@@ -266,30 +270,32 @@ if(isset($_POST['code'])):
 		</div>
 	</form>
 	<?php if($c[$p]['sms']['buyers'] === true): ?>
-		<table class="table table-bordered">
-			<thead>
-				<th><?php echo $lang[$p]['table_nickname']; ?></th>
-				<th><?php echo $lang[$p]['table_server']; ?></th>
-				<th><?php echo $lang[$p]['table_date']; ?></th>
-				<th><?php echo $lang[$p]['table_money']; ?></th>
-			</thead>
-			<tbody>
-				<?php $buyers = $db->fetchAll("SELECT * FROM `" . $c[$p]['db']['table'] . "` ORDER BY `time` DESC"); ?>
-				<?php if(empty($buyers)): ?>
-					<tr>
-						<td colspan="4"><?php echo $lang[$p]['table_no_buyers']; ?></td>
-					</tr>
-				<?php else: ?>
-					<?php foreach($buyers as $buyer): ?>
+		<div class="table-responsive">
+			<table class="table table-striped table-hover">
+				<thead>
+					<th><?php echo $lang[$p]['table_nickname']; ?></th>
+					<th><?php echo $lang[$p]['table_server']; ?></th>
+					<th><?php echo $lang[$p]['table_date']; ?></th>
+					<th><?php echo $lang[$p]['table_money']; ?></th>
+				</thead>
+				<tbody>
+					<?php $buyers = $db->fetchAll("SELECT * FROM `" . $c[$p]['db']['table'] . "` ORDER BY `time` DESC"); ?>
+					<?php if(empty($buyers)): ?>
 						<tr>
-							<td><?php echo htmlspecialchars($buyer['nickname']); ?></td>
-							<td><?php echo $mc['servers'][$buyer['server']]->title; ?></td>
-							<td><?php echo date("d/m/y H:i", $buyer['time']); ?></td>
-							<td><?php echo $buyer['amount']; ?></td>
+							<td colspan="4"><?php echo $lang[$p]['table_no_buyers']; ?></td>
 						</tr>
-					<?php endforeach; ?>
-				<?php endif; ?>
-			</tbody>
-		</table>
+					<?php else: ?>
+						<?php foreach($buyers as $buyer): ?>
+							<tr>
+								<td><?php echo htmlspecialchars($buyer['nickname']); ?></td>
+								<td><?php echo $mc['servers'][$buyer['server']]->title; ?></td>
+								<td><?php echo date("d/m/y H:i", $buyer['time']); ?></td>
+								<td><?php echo $buyer['amount']; ?></td>
+							</tr>
+						<?php endforeach; ?>
+					<?php endif; ?>
+				</tbody>
+			</table>
+		</div>
 	<?php endif; ?>
 <?php endif; ?>

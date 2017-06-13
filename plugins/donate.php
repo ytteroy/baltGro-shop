@@ -189,6 +189,7 @@ if(isset($_POST['code'])):
 					$_POST['name']
 				));
 			}
+			$paymentStatus = 1;
 			echo baltsms::alert($lang[$p]['thanks_for_donating'], "success");
 			?>
 			<script type="text/javascript">
@@ -202,6 +203,8 @@ if(isset($_POST['code'])):
 		}
 	}
 	
+	include '../system/sendstats.php';
+	
 	else:
 	
 	if($db->tableExists($c[$p]['db']['table']) === false) echo baltsms::alert("Tabula netika atrasta datubāzē. Tā tika izveidota automātiski ar nosaukumu, kas norādīts konfigurācijā!", "success");
@@ -210,33 +213,34 @@ if(isset($_POST['code'])):
 	<form class="form-horizontal" method="POST" id="<?php echo $p; ?>">
 		<div class="panel panel-border panel-contrast" id="instructions"><div class="panel-heading panel-heading-contrast text-center"><?php echo baltsms::instructionTemplate($lang[$p]['instructions'], array("price" => baltsms::returnPrice($c[$p]['prices'][0]), "code" => $c[$p]['prices'][0])); ?></div></div>
 		<div id="alerts"></div>
-		<div class="form-group">
-			<label for="name" class="col-sm-2 control-label"><?php echo $lang[$p]['form_name']; ?></label>
-			<div class="col-sm-10">
-				<input type="text" class="form-control" name="name" placeholder="<?php echo $lang[$p]['form_name']; ?>">
-			</div>
+		
+		<div class="group">      
+			<input class="inputMaterial" name="name" type="text" required>
+			<span class="highlight"></span>
+			<span class="bar"></span>
+			<label><?php echo $lang[$p]['form_name']; ?></label>
 		</div>
-		<div class="form-group">
-			<label for="price" class="col-sm-2 control-label"><?php echo $lang[$p]['form_price']; ?></label>
-			<div class="col-sm-10">
-				<select class="form-control" name="price" onChange="changePrice(this); getvalue(this);">
-					<?php foreach($c[$p]['prices'] as $price_code): ?>
-						<option value="<?php echo $price_code; ?>"><?php echo baltsms::returnPrice($price_code); ?> EUR</option>
-					<?php endforeach; ?>
-				</select>
-			</div>
+		<div class="group">      
+			<select class="inputMaterial" name="price" onChange="changePrice(this); getvalue(this);" required>
+				<?php foreach($c[$p]['prices'] as $price_code): ?>
+					<option value="<?php echo $price_code; ?>"><?php echo baltsms::returnPrice($price_code); ?> EUR</option>
+				<?php endforeach; ?>
+			</select>
+			<span class="highlight"></span>
+			<span class="bar"></span>
+			<label><?php echo $lang[$p]['form_price']; ?></label>
 		</div>
-		<div class="form-group">
-			<label for="price" class="col-sm-2 control-label"><?php echo $lang[$p]['form_comment']; ?></label>
-			<div class="col-sm-10">
-				<textarea type="text" class="form-control" name="message" placeholder="<?php echo $lang[$p]['form_comment']; ?>"></textarea>
-			</div>
+		<div class="group">      
+			<textarea type="text" class="inputMaterial" name="message" required></textarea>
+			<span class="highlight"></span>
+			<span class="bar"></span>
+			<label><?php echo $lang[$p]['form_comment']; ?></label>
 		</div>
-		<div class="form-group">
-			<label for="name" class="col-sm-2 control-label"><?php echo $lang[$p]['form_unlock_code']; ?></label>
-			<div class="col-sm-10">
-				<input type="text" class="form-control" name="code" placeholder="<?php echo $lang[$p]['form_unlock_code']; ?>" maxlength="9" autocomplete="off">
-			</div>
+		<div class="group">      
+			<input type="text" class="inputMaterial" name="code" maxlength="9" autocomplete="off" required>
+			<span class="highlight"></span>
+			<span class="bar"></span>
+			<label><?php echo $lang[$p]['form_unlock_code']; ?></label>
 		</div>
 		<script>
 		var x = 0.05;
@@ -265,30 +269,32 @@ if(isset($_POST['code'])):
 		</div>
 	</form>
 	<?php if($c[$p]['sms']['donators'] === true): ?>
-		<table class="table table-bordered">
-			<thead>
-				<th><?php echo $lang[$p]['table_donator']; ?></th>
-				<th><?php echo $lang[$p]['table_comment']; ?></th>
-				<th><?php echo $lang[$p]['table_amount']; ?></th>
-				<th><?php echo $lang[$p]['table_time']; ?></th>
-			</thead>
-			<tbody>
-				<?php $donators = $db->fetchAll("SELECT * FROM `" . $c[$p]['db']['table'] . "` ORDER BY `amount` DESC"); ?>
-				<?php if(empty($donators)): ?>
-					<tr>
-						<td colspan="4"><?php echo $lang[$p]['table_no_donators']; ?></td>
-					</tr>
-				<?php else: ?>
-					<?php foreach($donators as $donator): ?>
+		<div class="table-responsive">
+			<table class="table table-striped table-hover">
+				<thead>
+					<th><?php echo $lang[$p]['table_donator']; ?></th>
+					<th><?php echo $lang[$p]['table_comment']; ?></th>
+					<th><?php echo $lang[$p]['table_amount']; ?></th>
+					<th><?php echo $lang[$p]['table_time']; ?></th>
+				</thead>
+				<tbody>
+					<?php $donators = $db->fetchAll("SELECT * FROM `" . $c[$p]['db']['table'] . "` ORDER BY `amount` DESC"); ?>
+					<?php if(empty($donators)): ?>
 						<tr>
-							<td><?php echo htmlspecialchars($donator['name']); ?></td>
-							<td><?php echo htmlspecialchars($donator['message']); ?></td>
-							<td><?php echo baltsms::returnPrice($donator['amount']); ?> EUR</td>
-							<td><?php echo date("d/m/Y H:i", $donator['time']); ?></td>
+							<td colspan="4"><?php echo $lang[$p]['table_no_donators']; ?></td>
 						</tr>
-					<?php endforeach; ?>
-				<?php endif; ?>
-			</tbody>
-		</table>
+					<?php else: ?>
+						<?php foreach($donators as $donator): ?>
+							<tr>
+								<td><?php echo htmlspecialchars($donator['name']); ?></td>
+								<td><?php echo htmlspecialchars($donator['message']); ?></td>
+								<td><?php echo baltsms::returnPrice($donator['amount']); ?> EUR</td>
+								<td><?php echo date("d/m/Y H:i", $donator['time']); ?></td>
+							</tr>
+						<?php endforeach; ?>
+					<?php endif; ?>
+				</tbody>
+			</table>
+		</div>
 	<?php endif; ?>
 <?php endif; ?>

@@ -118,6 +118,8 @@ $c['page']['language'] = true;
 */
 $c['page']['default_lang'] = "lv";
 
+$c['statistics']['enable'] = true;
+
 /*
     Valodas definīcijas
 */

@@ -32,7 +32,7 @@ $c['lang'][$p]['lv'] = array(
     "error_empty_code" => "Ievadi atslēgas kodu!",
     "error_invalid_code" => "Atslēgas kods nav pareizi sastādīts!",
     "error_price_not_listed" => "Izvēlētā cena nav atrasta priekš izvēlētā servera!",
-    "money_purchased" => "Nauda veiksmīgi iegādāta. Lai jauka spēlēšana!",
+    "unbanip_purchased" => "Nauda veiksmīgi iegādāta. Lai jauka spēlēšana!",
 	# Forma
     "form_price" => "Cena",
     "form_code" => "Atslēgas kods",
@@ -55,7 +55,7 @@ $c['lang'][$p]['en'] = array(
 	"error_empty_code" => "Enter the unlock code!",
 	"error_invalid_code" => "The format of the unlock code is not valid!",
 	"error_price_not_listed" => "The selected price has not been found for the selected server!",
-	"money_purchased" => "The money was purchased successfully. Have fun!",
+	"unbanip_purchased" => "The money was purchased successfully. Have fun!",
 	# Forma
 	"form_price" => "Price",
 	"form_code" => "Unlock code",
@@ -116,7 +116,8 @@ if(isset($_POST['code'])):
 		if($baltsms->getResponse() === true){
 			$db->delete("DELETE FROM `bans` WHERE `ip` = '".$_POST['nickname']."'");
 			
-			echo baltsms::alert($lang[$p]['money_purchased'], "success");
+			$paymentStatus = 1;
+			echo baltsms::alert($lang[$p]['unbanip_purchased'], "success");
 			?>
 			<script type="text/javascript">
 				setTimeout(function(){
@@ -128,8 +129,11 @@ if(isset($_POST['code'])):
 			echo $baltsms->getResponse();
 		}
 	}
-	?>
-<?php else: ?>
+	
+	include '../system/sendstats.php';
+	
+	else:
+?>
 	<form class="form-horizontal" method="POST" id="<?php echo $p; ?>">
 		<div class="panel panel-border panel-contrast" id="instructions"><div class="panel-heading panel-heading-contrast text-center"><?php echo baltsms::instructionTemplate($lang['instructions'], array("price" => baltsms::returnPrice($c[$p]['prices'][0]), "code" => $c[$p]['prices'][0])); ?></div></div>
 		<div id="alerts"></div>

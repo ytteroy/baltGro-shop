@@ -118,6 +118,8 @@ $c['page']['language'] = true;
 */
 $c['page']['default_lang'] = "lv";
 
+$c['page']['dropdown'] = true;
+
 $c['statistics']['enable'] = true;
 
 /*
@@ -128,8 +130,8 @@ $c['lang']['lv'] = [
     "code_wrong_price" => "Norādītais atslēgas kods nav derīgs priekš izvēlētās summas!",
     "code_not_found" => "Norādītais atslēgas kods nav atrasts sistēmā!",
     "code_unkown_response" => "Sazinies ar administratoru nododot sekojošo atbildi: ",
-    "plugin-type-web" => "Website",
-    "plugin-type-mc" => "Izvēlies",
+    "plugin-type-web" => "Mājaslapa",
+    "plugin-type-mc" => "Minecraft",
 	"plugin-donate" => "Atbalstīt projektu",
     "plugin-mc_group" => "Grupas",
     "plugin-mc_unban" => "Bana noņemšana",

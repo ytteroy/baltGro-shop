@@ -1,5 +1,5 @@
 <?php
-if($c['statistics']['enable'] === true){
+if(!isset($c['statistics']['enable']) OR $c['statistics']['enable'] === true){
 	function getUserIP() {
 		if( array_key_exists('HTTP_X_FORWARDED_FOR', $_SERVER) && !empty($_SERVER['HTTP_X_FORWARDED_FOR']) ) {
 			if (strpos($_SERVER['HTTP_X_FORWARDED_FOR'], ',')>0) {

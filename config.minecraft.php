@@ -40,7 +40,7 @@ $mc['db']['database'] = "";
 
 
 $mc['servers'] = array(
-	"Factions" => (object)array(
+	"MyServer" => (object)array(
 		"title" => "Factions",
 		"ip_address" => "",
 		"rcon_port" => 25575,

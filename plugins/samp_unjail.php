@@ -25,7 +25,7 @@ $c[$p]['prices'] = array(
 );
 
 $c['lang'][$p]['lv'] = array(
-    "instructions" => "Lai iegādātos unban par <PRICE> EUR, sūti kodu <b><KEYWORD><CODE></b> uz <b><NUMBER></b>, lai saņemtu atslēgas kodu!<br>Ar PayPal var maksat UCP paneli<br><span style='color:red'>Tu nedrīksti atrasties spēlē pasūtot pakalpojumu!</span>",
+    "instructions" => "Lai iegādātos unban par <PRICE> EUR, sūti kodu <b><KEYWORD><CODE></b> uz <b><NUMBER></b>, lai saņemtu atslēgas kodu!<br><span style='color:red'>Tu nedrīksti atrasties spēlē pasūtot pakalpojumu!</span>",
 	# Kļūdas
     "error_empty_nickname" => "Ievadi savu spēlētāja vārdu!",
     "error_inserver" => "Lūdzu izej no servera! :)",
@@ -140,7 +140,7 @@ if(isset($_POST['code'])):
 	else:
 ?>
 	<form class="form-horizontal" method="POST" id="<?php echo $p; ?>">
-		<div class="panel panel-border panel-contrast" id="instructions"><div class="panel-heading panel-heading-contrast text-center"><?php echo baltsms::instructionTemplate($lang['instructions'], array("price" => baltsms::returnPrice($c[$p]['prices'][0]), "code" => $c[$p]['prices'][0])); ?></div></div>
+		<div class="panel panel-border panel-contrast" id="instructions" style="display:none;"><div class="panel-heading panel-heading-contrast text-center"><?php echo baltsms::instructionTemplate($lang[$p]['instructions'], array("price" => baltsms::returnPrice(0), "code" => 0, "length" => 0)); ?></div></div>
 		<div id="alerts"></div>
 		<div class="form-group">
 			<label for="nickname" class="col-sm-2 control-label"><?php echo $lang[$p]['form_player_name']; ?></label>

@@ -1,5 +1,5 @@
 <?php
-class db{
+class amxdb{
 	private $db_connection;
 	public $query_count = 0;
 	private $query_ok = array();

@@ -182,13 +182,12 @@ class amxbans{
 	public function getServers($gametype = 'cstrike'){
 		$res = $this->db->query("SELECT `id`, `hostname`, `address`, `rcon` FROM `".$this->dbprefix . $this->tables['servers']."` WHERE `gametype` = '".$gametype."'");
 		if($this->db->rows($res)){
-			$row = $this->db->fetch($res);
-			
 			$allServers = [];
-			$ipport = explode(':', $row['address']);
-			$data = ['title' => $row['hostname'], 'id' => $row['id'], 'ip' => $ipport[0], 'port' => $ipport[1], 'rcon' => $row['rcon'], 'show' => true];
-			$allServers[$row['id']] = ['title' => $row['hostname'], 'id' => $row['id'], 'ip' => $ipport[0], 'port' => $ipport[1], 'rcon' => $row['rcon'], 'show' => true];
-			
+			while($row = $this->db->fetch($res)){
+				$ipport = explode(':', $row['address']);
+				$data = ['title' => $row['hostname'], 'id' => $row['id'], 'ip' => $ipport[0], 'port' => $ipport[1], 'rcon' => $row['rcon'], 'show' => true];
+				$allServers[$row['id']] = ['title' => $row['hostname'], 'id' => $row['id'], 'ip' => $ipport[0], 'port' => $ipport[1], 'rcon' => $row['rcon'], 'show' => true];
+			}
 			return $allServers;
 		}else{
 			return [];

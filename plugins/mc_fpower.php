@@ -44,16 +44,11 @@ $c[$p]['ingame']['message'] = "<NICKNAME> just purchased faction power from our 
 $c[$p]['commands']['giveFPower'] = "f powerboost player <NICKNAME> <AMOUNT>";
 
 $c[$p]['prices'] = array(
-    "skyblock" => array(
+    "MyServer" => array(
     	50 => 50,
     	100 => 150,
     	150 => 300
     ),
-    "test" => array(
-    	100 => 30,
-    	200 => 100,
-    	250 => 150
-    )
 );
 
 $c['lang'][$p]['lv'] = array(
@@ -203,7 +198,6 @@ if(isset($_POST['code'])):
 	if($db->tableExists($c[$p]['db']['table']) === false) echo baltsms::createTable($p, $c[$p]['db']['table']);
 	?>
 	<form class="form-horizontal" method="POST" id="<?php echo $p; ?>">
-		<div class="panel panel-border panel-contrast" id="instructions" style="display:none;"><div class="panel-heading panel-heading-contrast text-center"><?php echo baltsms::instructionTemplate($lang[$p]['instructions'], array("price" => baltsms::returnPrice(0), "code" => 0, "length" => 0)); ?></div></div>
 		<div id="alerts"></div>
 		<div class="form-group">
 			<label for="nickname" class="col-sm-2 control-label"><?php echo $lang[$p]['form_player_name']; ?></label>
@@ -240,6 +234,7 @@ if(isset($_POST['code'])):
 				<?php endforeach;  ?>
 			</div>
 		</div>
+		<div id="buycode"></div>
 		<div class="form-group">
 			<label for="name" class="col-sm-2 control-label"><?php echo $lang[$p]['form_unlock_code']; ?></label>
 			<div class="col-sm-10">
@@ -247,27 +242,33 @@ if(isset($_POST['code'])):
 			</div>
 		</div>
 		<script>
-		var x = 0.00;
-		function getvalue(element){
+		var default_price = <?php echo (count($c[$p]['prices']) == count($c[$p]['prices'], COUNT_RECURSIVE) ? reset($c[$p]['prices']) : 0); ?>;
+		function getvalue(element, overwrite = 0){
 			if(jQuery(element).find(":selected").attr("data-price")){
 				price = jQuery(element).find(":selected").data("price");
 			}else{
-				price = element.value;
+				if(overwrite == 0){
+					price = element.value;
+				}else{
+					price = default_price;
+				}
 			}
-			x = price/100;
+			
+			jQuery('#buycode').html('<i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw text-center" style="font-size:50px; margin-bottom:10px;"></i>');
+			jQuery('#buycode').load('https://sys.airtel.lv/buycode/' + price, function(){
+				jQuery('#buycode').fadeIn('fast');
+			});
 		}
 		
-		function startPayment() {
-			var y = document.forms["<?php echo $p; ?>"]["code"].value;
-			if (y == null || y == "") {
-				openWinPayPal(x);
-				return false;
+		jQuery(document).ready(function(){
+			if(default_price <= 0){
+				jQuery('#instructions').hide();
+			}else{
+				getvalue(jQuery('select[name=price]'), default_price);
 			}
-		}
+		});
 		</script>
-
 		<div class="form-group">
-			<button type="button" class="btn btn-success" style="float:left !important; margin-left: 16px;" onclick="startPayment()"><?php echo $lang['pay_with_paypal']; ?></button>
 			<div id="baltsms-form-button">
 				<button type="submit" class="btn btn-primary"><?php echo $lang[$p]['form_buy']; ?></button>
 			</div>

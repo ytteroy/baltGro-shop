@@ -11,15 +11,15 @@
 */
 
 function is_ssl_active() {
-  if (isset($_SERVER['HTTP_CF_VISITOR'])) {
-    $cf_visitor = json_decode($_SERVER['HTTP_CF_VISITOR']);
-    if (isset($cf_visitor->scheme) && $cf_visitor->scheme == 'https') {
-      return true;
-    }
-  } else if (isset($_SERVER['HTTPS'])) {
-    return true;
-  }
-  return false;
+	if (isset($_SERVER['HTTP_CF_VISITOR'])) {
+		$cf_visitor = json_decode($_SERVER['HTTP_CF_VISITOR']);
+		if (isset($cf_visitor->scheme) && $cf_visitor->scheme == 'https') {
+			return true;
+		}
+	} else if (isset($_SERVER['HTTPS'])) {
+		return true;
+	}
+	return false;
 }
 
 define("config_present", true);
@@ -34,12 +34,13 @@ Konfigurāciju rediģēt drīkst pēc šīs līnijas
 */
 
 /*
-    Šis ir Tavs klienta ID, kuru var atrast Airtel E-commerece kontroles panelī
+    Šis ir Tavs klienta ID, kuru var atrast Airtel kontroles panelī
 */
-$c['sms']['client_id'] = 1;
+$c['sms']['client_id'] = 0;
 
 /*
-    Šis ir Tavs Airtel E-commerce kontroles paneļa reģistrētais atslēgas vārds, kurš tiks uzrādīts pie SMS sūtīšanas instrukcijām
+    Šis ir Tavs Airtel kontroles paneļa reģistrētais atslēgas vārds, kurš tiks uzrādīts pie SMS sūtīšanas instrukcijām
+	https://e-com.airtel.lv/sms/keywords
 */
 $c['sms']['keyword'] = "ART";
 
@@ -76,17 +77,13 @@ $c['sms']['plugins'] = [
         "mc_unban",
         "mc_money",
     ],
-	"amx" => [
-		"amx_vip",
-		"amx_admin",
-	],
 ];
 
 /*
     Šī ir direktorija pēc ROOT direktorijas, kas noved uz SMS veikala failiem
 	Ja pilnā direktorija uz veikalu ir /home/user/public_html/sms, tad jāievada sms.
 */
-$c['page']['directory'] = "sms";
+$c['page']['directory'] = "shop";
 
 /*
     Šis ļaus rediģēt lapas nosaukumu, kas ir <title> saturā
@@ -118,8 +115,15 @@ $c['page']['language'] = true;
 */
 $c['page']['default_lang'] = "lv";
 
+/*
+	Vai izvēlne būs kompakta un būs dropdown?
+*/
 $c['page']['dropdown'] = true;
 
+/*
+	Informācijas nosūtīšana Airtel serveriem. Statistikas nolūkiem. 
+	https://e-com.airtel.lv/statistics/purchases
+*/
 $c['statistics']['enable'] = true;
 
 /*
@@ -147,7 +151,6 @@ $c['lang']['lv'] = [
     "plugin-type-amx" => "AMX",
     "plugin-amx_admin" => "AMX admin",
     "plugin-amx_vip" => "AMX VIP",
-	"pay_with_paypal" => "Maksāt ar Airtel Payhub",
     "plugin_not_found" => "[plugin-not-found] Spraudnis netika atrasts. Pārbaudi vai fails <strong>plugins/<PLUGIN></strong> eksistē!"
 ];
 
@@ -173,7 +176,6 @@ $c['lang']['en'] = [
 	"plugin-type-amx" => "AMX",
 	"plugin-amx_admin" => "AMX admin",
     "plugin-amx_vip" => "AMX VIP",
-	"pay_with_paypal" => "Pay with Airtel Payhub",
     "plugin_not_found" => "[plugin-not-found] Plugin was not found. Check if the file <strong>plugins/<PLUGIN></strong> exists!"
 ];
 
@@ -190,7 +192,7 @@ if($c['page']['debug'] === true){
     ini_set("display_errors", 0);
 }
 
-$c['page']['lang_personal'] = (isset($_COOKIE['baltsms_language'])) ? $_COOKIE['baltsms_language'] : $c['page']['default_lang'];
+$c['page']['lang_personal'] = (isset($_COOKIE['airtelshop_language'])) ? $_COOKIE['airtelshop_language'] : $c['page']['default_lang'];
 $lang = $c['lang'][$c['page']['lang_personal']];
 
 require $c['dir'] . '/system/functions.php';

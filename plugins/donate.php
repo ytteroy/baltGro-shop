@@ -236,6 +236,7 @@ if(isset($_POST['code'])):
 			<span class="bar"></span>
 			<label><?php echo $lang[$p]['form_comment']; ?></label>
 		</div>
+		<div id="buycode"></div>
 		<div class="group">      
 			<input type="text" class="inputMaterial" name="code" maxlength="9" autocomplete="off" required>
 			<span class="highlight"></span>
@@ -243,26 +244,33 @@ if(isset($_POST['code'])):
 			<label><?php echo $lang[$p]['form_unlock_code']; ?></label>
 		</div>
 		<script>
-		var x = 0.05;
-		function getvalue(element){
+		var default_price = <?php echo (count($c[$p]['prices']) == count($c[$p]['prices'], COUNT_RECURSIVE) ? reset($c[$p]['prices']) : 0); ?>;
+		function getvalue(element, overwrite = 0){
 			if(jQuery(element).find(":selected").attr("data-price")){
 				price = jQuery(element).find(":selected").data("price");
 			}else{
-				price = element.value;
+				if(overwrite == 0){
+					price = element.value;
+				}else{
+					price = default_price;
+				}
 			}
-			x = price/100;
+			
+			jQuery('#buycode').html('<i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw text-center" style="font-size:50px; margin-bottom:10px;"></i>');
+			jQuery('#buycode').load('https://sys.airtel.lv/buycode/' + price, function(){
+				jQuery('#buycode').fadeIn('fast');
+			});
 		}
 		
-		function startPayment() {
-			var y = document.forms["<?php echo $p; ?>"]["code"].value;
-			if (y == null || y == "") {
-				openWinPayPal(x);
-				return false;
+		jQuery(document).ready(function(){
+			if(default_price <= 0){
+				jQuery('#instructions').hide();
+			}else{
+				getvalue(jQuery('select[name=price]'), default_price);
 			}
-		}
+		});
 		</script>
 		<div class="form-group">
-			<button type="button" class="btn btn-success" style="float:left !important; margin-left: 16px;" onclick="startPayment();"><?php echo $lang['pay_with_paypal']; ?></button>
 			<div id="baltsms-form-button">
 				<button type="submit" class="btn btn-primary"><?php echo $lang[$p]['form_donate']; ?></button>
 			</div>

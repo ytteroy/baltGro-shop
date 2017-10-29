@@ -9,6 +9,7 @@
 	<title><?php echo $c['page']['title']; ?></title>
 	<link rel="stylesheet" type="text/css" href="//cdn.airtel.lv/beagle/css/style.css">
 	<link rel="stylesheet" type="text/css" href="<?php echo $c['url'] . '/' . $c['page']['directory']; ?>/assets/css/baltgro.css?<?php echo time(); ?>">
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" type="text/css"/>
 </head>
 <body class="baltsms">
 	<div class="col-md-<?php echo $c['page']['size'][0]; ?> col-md-offset-<?php echo $c['page']['size'][1]; ?>">

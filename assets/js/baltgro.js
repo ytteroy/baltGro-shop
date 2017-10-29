@@ -73,10 +73,10 @@ function changePrice(element){
 }
 
 function setLanguage(language){
-	if(jQuery.cookie("baltsms_language") == language){
+	if(jQuery.cookie("airtelshop_language") == language){
 		return false
 	}else{
-		jQuery.cookie("baltsms_language", language, { expires: 31, path: "/" });
+		jQuery.cookie("airtelshop_language", language, { expires: 31, path: "/" });
 		location.reload();
 	}
 }

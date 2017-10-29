@@ -142,4 +142,7 @@ label {
   -moz-animation:inputHighlighter 0.3s ease;
   animation:inputHighlighter 0.3s ease;
 }
+
+#buycode {
+	margin-bottom:15px;
 }
